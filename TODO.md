@@ -1,0 +1,9 @@
+- [ ] filesystem items
+- [ ] readline suggestions
+- [ ] less
+- [ ] slug to tree
+- [ ] index page
+- [ ] Header
+- [ ] customization
+- [ ] readline ctrl+c ctrl+d ctrl+l
+- [ ] readline history

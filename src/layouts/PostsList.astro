@@ -1,0 +1,70 @@
+---
+import ShellPage from "./ShellPage.astro";
+import { getFsItem } from "@utils/filesystem";
+
+export type Props = {
+    currentPath: string;
+};
+
+const { currentPath } = Astro.props;
+const fsItem = await getFsItem(currentPath);
+
+if (fsItem.type !== "dir") {
+    throw new Error("This is not a directory.");
+}
+
+const childern = (await fsItem.getChildren?.()) || [];
+---
+
+<ShellPage currentPath={currentPath} command="ls">
+    <div class="my-8" id="init-content" data-init-type="list">
+        <table class="table-auto w-full *:text-left posts-list">
+            <thead>
+                <tr>
+                    <th class="w-2/3">File</th>
+                    <th>Tag</th>
+                </tr>
+            </thead>
+            <tbody>
+                {
+                    childern.map((item) => (
+                        <tr>
+                            <td>
+                                <a
+                                    href={
+                                        item.symlink || (currentPath == "/" ? "" : currentPath) + "/" + item.name
+                                    }
+                                >
+                                    {item.name}{item.type === "dir" ? "/" : ""}
+                                </a>
+                            </td>
+                        </tr>
+                    ))
+                }
+            </tbody>
+        </table>
+
+        <!-- <div class="border-t-2 border-black border-dashed mt-4 pt-4">
+            <div>There are total {collection.length} files, showing 1-10.</div>
+            <div>Use `prev` or `next` command to navigate.</div>
+            <div class="flex justify-between mt-4">
+                <a>⬅️ Go Prev</a>
+                <a>Go Next ➡️</a>
+            </div>
+        </div> -->
+    </div>
+</ShellPage>
+
+<style>
+    .posts-list thead::after {
+        content: "";
+        display: table-row;
+        height: 1rem;
+    }
+    .posts-list tbody::before {
+        content: "";
+        display: table-row;
+        height: 1rem;
+        @apply border-t-2 border-black border-dashed;
+    }
+</style>

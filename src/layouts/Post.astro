@@ -1,0 +1,35 @@
+---
+import { getCollection } from "astro:content";
+import ShellPage from "./ShellPage.astro";
+import type { CollectionEntry } from "astro:content";
+
+export type Props = {
+    post: CollectionEntry<"blog">;
+};
+
+const { post } = Astro.props;
+
+const { Content } = await post.render();
+---
+
+<ShellPage currentPath="/" command={"cat /posts/" + post.slug + ".md"}>
+    <div class="my-8" id="init-content" data-init-type="file">
+        <article role="article" class="prose dark:prose-invert prose-lg">
+            <Content />
+        </article>
+    </div>
+</ShellPage>
+
+<style>
+    .posts-list thead::after {
+        content: "";
+        display: table-row;
+        height: 1rem;
+    }
+    .posts-list tbody::before {
+        content: "";
+        display: table-row;
+        height: 1rem;
+        @apply border-t-2 border-black border-dashed;
+    }
+</style>

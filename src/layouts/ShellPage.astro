@@ -1,0 +1,25 @@
+---
+import Base from "./Base.astro";
+import ShellPrompt from "@components/ShellPrompt";
+import { InteractiveShell } from "@components/InteractiveShell";
+
+export interface Props {
+    currentPath: string;
+    command: string;
+}
+
+const { currentPath: current, command }: Props = Astro.props;
+---
+
+<Base>
+    <div
+        class="max-w-screen-md mx-auto p-8 font-mono text-lg"
+        style="line-height: 1.5rem;"
+    >
+        <div id="init-history">
+            <ShellPrompt currentPath={current} command={command} />
+            <slot />
+        </div>
+        <InteractiveShell originPwd={current} client:load />
+    </div>
+</Base>

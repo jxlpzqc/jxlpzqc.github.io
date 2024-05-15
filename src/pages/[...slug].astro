@@ -1,0 +1,39 @@
+---
+import type { GetStaticPaths } from "astro";
+import PostsList from "@layouts/PostsList.astro";
+import { getAllFsItems } from "@utils/filesystem";
+import type { CollectionEntry } from "astro:content";
+import Post from "@layouts/Post.astro";
+
+export type Props = {
+    type: "file" | "dir";
+    blog?: CollectionEntry<"blog">;
+};
+
+export const getStaticPaths = (async () => {
+    const items = await getAllFsItems();
+
+    return items
+        .filter((x) => x.type !== "symlink")
+        .map((item) => ({
+            params: {
+                slug: item.absPath!!,
+            },
+            props: {
+                type: item.type,
+                blog: item.collectionObject,
+            },
+        }));
+}) satisfies GetStaticPaths;
+
+const { type, blog } = Astro.props;
+const { slug } = Astro.params;
+---
+
+{
+    type === "dir" ? (
+        <PostsList currentPath={slug || "/"} />
+    ) : (
+        blog && <Post post={blog} />
+    )
+}
