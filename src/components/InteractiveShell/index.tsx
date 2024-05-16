@@ -31,7 +31,7 @@ function HistoryView({ history }: { history: CommandHistory }) {
     }, [history.resultElement]);
 
 
-    return <div className="py-2">
+    return <div className="pb-4">
         <ShellPrompt currentPath={history.path} command={history.command} />
         {
             history.runningStatusList?.map((status) => (
