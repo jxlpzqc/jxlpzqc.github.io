@@ -6,6 +6,20 @@ export type Props = {
     page?: number;
 };
 
+function ItemView({ item }: { item: FileSystemItem }) {
+    return <tr>
+        <td>
+            <a href={item.symlink || item.absPath} >
+                {item.name + (item.type === "dir" ? "/" : "")}
+            </a>
+        </td>
+
+        <td>
+            <div className="text-gray-500">{item.name + (item.type === "dir" ? "/" : "")}</div>
+        </td>
+    </tr>
+}
+
 export default function (props: Props) {
 
     const path = props.file.absPath || "/";
@@ -17,26 +31,14 @@ export default function (props: Props) {
     return (<table className="table-auto w-full *:text-left posts-list">
         <thead>
             <tr>
-                <th className="w-2/3">File</th>
-                <th>Tag</th>
+                <th>Title / Desc</th>
+                <th>File Name</th>
+                <th>Tags</th>
             </tr>
         </thead>
         <tbody>
             {
-                children.map((item) => (
-                    <tr>
-                        <td>
-                            <a
-                                href={
-                                    item.symlink ||
-                                    (path == "/" ? "" : path) + "/" + item.name
-                                }
-                            >
-                                {item.name + (item.type === "dir" ? "/" : "")}
-                            </a>
-                        </td>
-                    </tr>
-                ))
+                children.map((item) => (<ItemView item={item} />))
             }
         </tbody>
     </table>);
