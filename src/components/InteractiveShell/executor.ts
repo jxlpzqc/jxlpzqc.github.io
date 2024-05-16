@@ -1,4 +1,5 @@
 import type { CommandHistory } from ".";
+import type { FullScreenAppRequest } from "./FullScreenApp";
 import { parseCommand } from "./parser";
 
 export async function fetchItem(dir: string): Promise<{
@@ -7,18 +8,29 @@ export async function fetchItem(dir: string): Promise<{
     type?: string;
     element?: HTMLElement;
 }> {
-    const url = dir;
+    let url = dir;
     try {
-        const res = await fetch(url);
-        if (res.status === 404) {
-            return { success: false, failMessage: "No such file or directory." };
-        } else if (res.status < 200 || res.status >= 400) {
-            return { success: false, failMessage: "Failed to fetch item." };
-        }
-        const text = await res.text();
-        const dom = new DOMParser().parseFromString(text, "text/html");
-        const element = dom.getElementById("init-content");
-        const type = element?.dataset?.initType;
+        let type: string = "";
+        let element: HTMLElement | null;
+        do {
+            const res = await fetch(url);
+            if (res.status === 404) {
+                return { success: false, failMessage: "No such file or directory." };
+            } else if (res.status < 200 || res.status >= 400) {
+                return { success: false, failMessage: "Failed to fetch item." };
+            }
+            const text = await res.text();
+            const dom = new DOMParser().parseFromString(text, "text/html");
+            element = dom.getElementById("init-content");
+
+            type = element?.dataset?.initType || "";
+            if (!type) throw new Error("No type.");
+            if (type === "symlink") {
+                const linkUrl = element?.dataset?.linkUrl;
+                if (!linkUrl) throw new Error("No linkUrl.");
+                url = linkUrl;
+            }
+        } while (type === "symlink");
         if (element && type) {
             return { success: true, type, element: element };
         }
@@ -54,10 +66,11 @@ type CommandExecResult = {
     histories: CommandHistory[];
     pwd: string;
     executing?: boolean;
-    currentDirItems?: string[];
 }
 
-export function* executeCommand(command: string, pwd: string, history: CommandHistory[] = [])
+export function* executeCommand(command: string, pwd: string, history: CommandHistory[] = [],
+    sendFullScreenAppReq: ((req: FullScreenAppRequest | undefined) => void) | undefined = undefined
+)
     : Generator<CommandExecResult | Promise<CommandExecResult>> {
     const actions = parseCommand(command);
 
@@ -71,7 +84,7 @@ export function* executeCommand(command: string, pwd: string, history: CommandHi
 
     let newPwd = pwd;
 
-    const getRemoteCommandResult = async (path: string, type: 'cd' | 'ls' | 'cat' | 'go') => {
+    const getRemoteCommandResult = async (path: string, type: 'cd' | 'ls' | 'cat' | 'go' | 'less') => {
         // newCommandHistory.runningStatusList?.push({
         //     type: "running",
         //     message: "Fetching content from remote... "
@@ -109,6 +122,23 @@ export function* executeCommand(command: string, pwd: string, history: CommandHi
                             message: "Not a file."
                         });
                     }
+                } else if (type === 'less') {
+                    if (result.type === "file") {
+                        newCommandHistory.runningStatusList = [];
+                        sendFullScreenAppReq?.({
+                            type: "less",
+                            props: {
+                                content: result.element,
+                                filename: path.split("/").pop() || "",
+                            },
+                        });
+                    } else {
+                        newCommandHistory.runningStatusList?.push({
+                            type: "fail",
+                            message: "Not a file."
+                        });
+                    }
+
                 } else if (type === 'go') {
                     newCommandHistory.runningStatusList = [];
                     newCommandHistory.resultElement = result.element;
@@ -161,7 +191,7 @@ export function* executeCommand(command: string, pwd: string, history: CommandHi
         } else if (action.type === "viewPost") {
             let path = action.path!;
             path = getAbsoluteDir(path, pwd);
-            yield getRemoteCommandResult(path, 'cat');
+            yield getRemoteCommandResult(path, action.viewer === 'less' ? 'less' : 'cat');
         } else if (action.type === "list") {
             let path = action.path!;
             path = path ? getAbsoluteDir(path, pwd) : pwd;

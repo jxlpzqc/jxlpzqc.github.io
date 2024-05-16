@@ -1,0 +1,54 @@
+---
+import { getCollection } from "astro:content";
+import ShellPage from "./ShellPage.astro";
+import type { CollectionEntry } from "astro:content";
+import type { FileSystemItem } from "@utils/filesystem";
+
+export type Props = {
+    symlinkFile: FileSystemItem;
+};
+
+const { symlinkFile: file } = Astro.props;
+
+if (file.type !== "symlink") {
+    throw new Error("This page is only for symlink files");
+}
+---
+
+<ShellPage currentPath="/" command={"readlink " + file.absPath}>
+    <div
+        class="my-8"
+        id="init-content"
+        data-init-type="symlink"
+        data-link-url={file.symlink}
+    >
+        <div class="text-lg">
+            Symbol link to: <span>{file.symlink}</span>
+        </div>
+        <div class="text-lg">
+            Page will be redirected to the target page in 3 seconds...
+        </div>
+    </div>
+
+</ShellPage>
+
+<script>
+    setTimeout(() => {
+        const link = document.getElementById("init-content")?.dataset.linkUrl;
+        if(link) location.href = link;
+    }, 3000);
+</script>
+
+<style>
+    .posts-list thead::after {
+        content: "";
+        display: table-row;
+        height: 1rem;
+    }
+    .posts-list tbody::before {
+        content: "";
+        display: table-row;
+        height: 1rem;
+        @apply border-t-2 border-black border-dashed;
+    }
+</style>

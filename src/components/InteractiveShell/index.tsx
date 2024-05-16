@@ -1,7 +1,10 @@
 import ShellPrompt from "@components/ShellPrompt";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, type ReactElement, type ReactNode } from "react";
 import { executeCommand } from "./executor";
 import ReadLine from "./ReadLine";
+import LessApp from "@components/LessApp";
+import type { FullScreenAppRequest } from "./FullScreenApp";
+import FullScreenApp from "./FullScreenApp";
 
 
 export type CommandHistory = {
@@ -53,8 +56,14 @@ export function InteractiveShell({ originPwd }: { originPwd: string }) {
     const [executing, setExecuting] = useState(false);
     const [history, setHistory] = useState<CommandHistory[]>([]);
 
+    const [fullScreenAppReq, setFullScreenAppReq] = useState<FullScreenAppRequest | undefined>();
+
+    const sendFullScreenAppReq = (req: FullScreenAppRequest | undefined) => {
+        setFullScreenAppReq(req);
+    }
+
     const submitCommand = async (command: string) => {
-        const result = executeCommand(command, pwd, history);
+        const result = executeCommand(command, pwd, history, sendFullScreenAppReq);
         while (true) {
             const { value, done } = result.next();
             if (done) {
@@ -66,6 +75,18 @@ export function InteractiveShell({ originPwd }: { originPwd: string }) {
             setExecuting(executing || false);
         }
 
+        setTimeout(() => {
+            window.scrollTo({ top: document.body.scrollHeight, behavior: "smooth" });
+        }, 0);
+    }
+
+    const handleAbortCommand = (command: string) => {
+        setHistory([...history, {
+            id: history.length,
+            path: pwd,
+            command: command,
+            runningStatusList: []
+        }]);
         setTimeout(() => {
             window.scrollTo({ top: document.body.scrollHeight, behavior: "smooth" });
         }, 0);
@@ -99,6 +120,7 @@ export function InteractiveShell({ originPwd }: { originPwd: string }) {
 
     return <div>
         {history.map((h) => <HistoryView key={h.id} history={h} />)}
-        <ReadLine executing={executing} pwd={pwd} onSubmitCommand={submitCommand} />
+        <ReadLine executing={executing} pwd={pwd} onSubmitCommand={submitCommand} onAbortCommand={handleAbortCommand} />
+        <FullScreenApp req={fullScreenAppReq} />
     </div>
 }

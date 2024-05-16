@@ -1,39 +1,46 @@
 ---
 import type { GetStaticPaths } from "astro";
 import PostsList from "@layouts/PostsList.astro";
-import { getAllFsItems } from "@utils/filesystem";
+import { getAllFsItems, type FileSystemItem } from "@utils/filesystem";
 import type { CollectionEntry } from "astro:content";
 import Post from "@layouts/Post.astro";
+import Symlink from "@layouts/Symlink.astro";
 
 export type Props = {
     type: "file" | "dir";
     blog?: CollectionEntry<"blog">;
+    file?: FileSystemItem;
 };
 
 export const getStaticPaths = (async () => {
     const items = await getAllFsItems();
 
-    return items
-        .filter((x) => x.type !== "symlink")
-        .map((item) => ({
-            params: {
-                slug: item.absPath!!,
-            },
-            props: {
-                type: item.type,
-                blog: item.collectionObject,
-            },
-        }));
+    return items.map((item) => ({
+        params: {
+            slug: item.absPath!!,
+        },
+        props: {
+            type: item.type,
+            blog: item.collectionObject,
+            file: item,
+        },
+    }));
 }) satisfies GetStaticPaths;
 
-const { type, blog } = Astro.props;
+const { type, blog, file } = Astro.props;
 const { slug } = Astro.params;
 ---
 
 {
     type === "dir" ? (
-        <PostsList currentPath={slug || "/"} />
-    ) : (
+        <PostsList
+            currentPath={
+                slug ? (slug.startsWith("/") ? slug : "/" + slug) : "/"
+            }
+        />
+    ) : type === "file" ? (
         blog && <Post post={blog} />
+    ) : (
+        file && <Symlink symlinkFile={file} />
     )
 }

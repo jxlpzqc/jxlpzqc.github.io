@@ -13,7 +13,7 @@ if (fsItem.type !== "dir") {
     throw new Error("This is not a directory.");
 }
 
-const childern = (await fsItem.getChildren?.()) || [];
+const childern = fsItem.children || [];
 ---
 
 <ShellPage currentPath={currentPath} command="ls">
@@ -32,10 +32,16 @@ const childern = (await fsItem.getChildren?.()) || [];
                             <td>
                                 <a
                                     href={
-                                        item.symlink || (currentPath == "/" ? "" : currentPath) + "/" + item.name
+                                        item.symlink ||
+                                        (currentPath == "/"
+                                            ? ""
+                                            : currentPath) +
+                                            "/" +
+                                            item.name
                                     }
                                 >
-                                    {item.name}{item.type === "dir" ? "/" : ""}
+                                    {item.name +
+                                        (item.type === "dir" ? "/" : "")}
                                 </a>
                             </td>
                         </tr>

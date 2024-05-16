@@ -16,7 +16,7 @@ function ShellPrompt({ currentPath, command, hasCursor, cursorPosition }: Props)
             <span className="absolute left-0" style={{
                 width: 'calc(100% + 30px)',
             }}>
-                <span className="opacity-0">{fakeCommandStr}</span>
+                <span style={{ visibility: 'hidden' }}>{fakeCommandStr}</span>
                 {hasCursor && <span
                     className="animate-cursor-blink bg-black align-top inline-block w-3"
                     style={{ height: '24px' }}></span>}

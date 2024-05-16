@@ -1,9 +1,14 @@
-- [ ] filesystem items
+- [x] filesystem items
+- [x] symbol link stub
+- [x] get item symbol link file
 - [ ] readline suggestions
-- [ ] less
-- [ ] slug to tree
+- [x] less
+- [x] slug to tree
 - [ ] index page
 - [ ] Header
 - [ ] customization
-- [ ] readline ctrl+c ctrl+d ctrl+l
-- [ ] readline history
+- [x] readline ctrl+c ctrl+d ctrl+l
+- [x] readline history
+- [ ] env
+- [ ] cache
+- [ ] tags and archives
