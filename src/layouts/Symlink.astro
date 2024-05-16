@@ -5,17 +5,18 @@ import type { CollectionEntry } from "astro:content";
 import type { FileSystemItem } from "@utils/filesystem";
 
 export type Props = {
-    symlinkFile: FileSystemItem;
+    path: string;
+    file: FileSystemItem;
 };
 
-const { symlinkFile: file } = Astro.props;
+const { file, path } = Astro.props;
 
 if (file.type !== "symlink") {
     throw new Error("This page is only for symlink files");
 }
 ---
 
-<ShellPage currentPath="/" command={"readlink " + file.absPath}>
+<ShellPage currentPath={path} command={"readlink " + file.absPath}>
     <div
         class="my-8"
         id="init-content"
@@ -29,13 +30,12 @@ if (file.type !== "symlink") {
             Page will be redirected to the target page in 3 seconds...
         </div>
     </div>
-
 </ShellPage>
 
 <script>
     setTimeout(() => {
         const link = document.getElementById("init-content")?.dataset.linkUrl;
-        if(link) location.href = link;
+        if (link) location.href = link;
     }, 3000);
 </script>
 

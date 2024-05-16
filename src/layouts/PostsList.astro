@@ -1,19 +1,19 @@
 ---
+import type { FileSystemItem } from "@utils/filesystem";
 import ShellPage from "./ShellPage.astro";
-import { getFsItem } from "@utils/filesystem";
 
 export type Props = {
-    currentPath: string;
+    path: string;
+    file: FileSystemItem;
 };
 
-const { currentPath } = Astro.props;
-const fsItem = await getFsItem(currentPath);
+const { file: dirFile, path: currentPath } = Astro.props;
 
-if (fsItem.type !== "dir") {
+if (dirFile.type !== "dir") {
     throw new Error("This is not a directory.");
 }
 
-const childern = fsItem.children || [];
+const childern = dirFile.children || [];
 ---
 
 <ShellPage currentPath={currentPath} command="ls">

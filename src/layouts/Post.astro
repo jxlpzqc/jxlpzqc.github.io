@@ -2,17 +2,20 @@
 import { getCollection } from "astro:content";
 import ShellPage from "./ShellPage.astro";
 import type { CollectionEntry } from "astro:content";
+import type { FileSystemItem } from "@utils/filesystem";
 
 export type Props = {
     post: CollectionEntry<"blog">;
+    path: string;
+    file: FileSystemItem;
 };
 
-const { post } = Astro.props;
+const { post, file, path } = Astro.props;
 
 const { Content } = await post.render();
 ---
 
-<ShellPage currentPath="/" command={"cat /posts/" + post.slug + ".md"}>
+<ShellPage currentPath={path} command={"cat " + file.absPath}>
     <div class="my-8" id="init-content" data-init-type="file">
         <article role="article" class="prose dark:prose-invert prose-lg">
             <Content />

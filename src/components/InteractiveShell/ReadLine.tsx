@@ -95,10 +95,18 @@ export default function ReadLine({ executing, pwd, onSubmitCommand, onAbortComma
         }
     };
 
+    const openOrNextSuggestion = () => { 
+        //TODO: implement openOrNextSuggestion
+    }
+    const openAndpreviousSuggestion = () => { 
+        //TOOD: implement openAndpreviousSuggestion
+    }
+
     //#endregion
 
     const handleKeyDown = async (e: KeyboardEvent) => {
         const ctrl = e.ctrlKey; // in mac, also use ctrl, not command
+        const shift = e.shiftKey;
         let keyHandled = true;
 
         // also use emacs key bindings
@@ -126,6 +134,8 @@ export default function ReadLine({ executing, pwd, onSubmitCommand, onAbortComma
         else if (e.key === "Enter") submit();
         else if (ctrl && e.key === "c") abort();
         else if (ctrl && e.key === "l") { setCommand(""); setCursorPosition(0); onSubmitCommand("clear"); }
+        else if (!shift && e.key === "Tab") openOrNextSuggestion();
+        else if (shift && e.key === "Tab") openAndpreviousSuggestion();
         else keyHandled = false;
 
         if (keyHandled) {

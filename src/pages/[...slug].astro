@@ -28,19 +28,20 @@ export const getStaticPaths = (async () => {
 }) satisfies GetStaticPaths;
 
 const { type, blog, file } = Astro.props;
+
 const { slug } = Astro.params;
+
+let currentPath = slug ? (slug.startsWith("/") ? slug : "/" + slug) : "/";
+
+if (file?.type !== "dir") {
+    currentPath = currentPath.substring(0, currentPath.lastIndexOf("/"));
+}
 ---
 
 {
-    type === "dir" ? (
-        <PostsList
-            currentPath={
-                slug ? (slug.startsWith("/") ? slug : "/" + slug) : "/"
-            }
-        />
-    ) : type === "file" ? (
-        blog && <Post post={blog} />
-    ) : (
-        file && <Symlink symlinkFile={file} />
-    )
+    type === "dir"
+        ? file && <PostsList path={currentPath} file={file} />
+        : type === "file"
+          ? blog && file && <Post path={currentPath} post={blog} file={file} />
+          : file && <Symlink path={currentPath} file={file} />
 }
