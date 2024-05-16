@@ -15,7 +15,11 @@ function ItemView({ item }: { item: FileSystemItem }) {
         </td>
 
         <td>
-            <div className="text-gray-500">{item.name + (item.type === "dir" ? "/" : "")}</div>
+            <div className="text-gray-500">{item.collectionObject?.data?.title || item.desc || item.name}</div>
+        </td>
+
+        <td>
+            <div className="text-gray-500">{item.tag?.join(",")}</div>
         </td>
     </tr>
 }
@@ -38,7 +42,7 @@ export default function (props: Props) {
         </thead>
         <tbody>
             {
-                children.map((item) => (<ItemView item={item} />))
+                children.map((item) => (<ItemView item={item} key={item.absPath} />))
             }
         </tbody>
     </table>);

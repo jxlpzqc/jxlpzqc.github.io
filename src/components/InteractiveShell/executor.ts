@@ -142,6 +142,9 @@ export function* executeCommand(command: string, pwd: string, history: CommandHi
                 } else if (type === 'go') {
                     newCommandHistory.runningStatusList = [];
                     newCommandHistory.resultElement = result.element;
+                    if (result.type === "list") {
+                        newPwd = path;
+                    }
                 }
             } else {
                 newCommandHistory.runningStatusList?.push({
@@ -185,7 +188,7 @@ export function* executeCommand(command: string, pwd: string, history: CommandHi
                 newCommandHistory.runningStatusList = [{ type: "fail", message: "cd: no argument." }];
                 continue;
             }
-            // TODO: change history
+            window.history.pushState({}, "", inputDir);
             inputDir = getAbsoluteDir(inputDir, pwd);
             yield getRemoteCommandResult(inputDir, 'cd');
         } else if (action.type === "viewPost") {

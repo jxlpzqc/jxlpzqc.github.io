@@ -1,14 +1,10 @@
-- [x] filesystem items
-- [x] symbol link stub
-- [x] get item symbol link file
-- [ ] readline suggestions
-- [x] less
-- [x] slug to tree
-- [x] index page
-- [ ] Header
-- [ ] customization
-- [x] readline ctrl+c ctrl+d ctrl+l
-- [x] readline history
+TODO:
 - [ ] env
 - [ ] cache
-- [ ] tags and archives
+- [ ] readline suggestions
+- [ ] customization
+- [ ] `pipe to less` button
+
+
+Bugs:
+- [ ] less ctrl+f

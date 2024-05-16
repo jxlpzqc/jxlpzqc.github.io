@@ -22,7 +22,7 @@ function FullScreenInnerAppWrapper(props: PropsWithChildren<{}>) {
 
     // create portal
     return ReactDOM.createPortal(
-        <div className="w-screen h-screen fixed top-0 left-0">
+        <div className="w-screen h-screen fixed top-0 left-0 z-30">
             {props.children}
         </div>,
         document.body);

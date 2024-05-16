@@ -31,7 +31,7 @@ function HistoryView({ history }: { history: CommandHistory }) {
     }, [history.resultElement]);
 
 
-    return <div className="mb-4">
+    return <div className="py-2">
         <ShellPrompt currentPath={history.path} command={history.command} />
         {
             history.runningStatusList?.map((status) => (
@@ -62,6 +62,20 @@ export function InteractiveShell({ originPwd }: { originPwd: string }) {
         setFullScreenAppReq(req);
     }
 
+    const historyContainerRef = useRef<HTMLDivElement>(null);
+
+    const scrollToLastHistory = () => {
+        setTimeout(() => {
+            const target = historyContainerRef.current
+                ?.children[historyContainerRef.current.children.length - 1] as HTMLDivElement;
+
+            // scroll to target's top
+            if (target) {
+                window.scrollTo({ top: target.offsetTop - 116, behavior: "smooth" });
+            }
+        }, 0);
+    }
+
     const submitCommand = async (command: string) => {
         const result = executeCommand(command, pwd, history, sendFullScreenAppReq);
         while (true) {
@@ -74,10 +88,7 @@ export function InteractiveShell({ originPwd }: { originPwd: string }) {
             setPwd(pwd);
             setExecuting(executing || false);
         }
-
-        setTimeout(() => {
-            window.scrollTo({ top: document.body.scrollHeight, behavior: "smooth" });
-        }, 0);
+        scrollToLastHistory();
     }
 
     const handleAbortCommand = (command: string) => {
@@ -87,9 +98,7 @@ export function InteractiveShell({ originPwd }: { originPwd: string }) {
             command: command,
             runningStatusList: []
         }]);
-        setTimeout(() => {
-            window.scrollTo({ top: document.body.scrollHeight, behavior: "smooth" });
-        }, 0);
+        scrollToLastHistory();
     }
 
     // catch browser history change event
@@ -106,6 +115,8 @@ export function InteractiveShell({ originPwd }: { originPwd: string }) {
                 window.history.pushState({}, "", path);
                 window.dispatchEvent(new PopStateEvent('popstate'));
             }
+            // unfocus the link
+            e.target.blur();
         }
     }
 
@@ -119,7 +130,9 @@ export function InteractiveShell({ originPwd }: { originPwd: string }) {
     }, [submitCommand]);
 
     return <div>
-        {history.map((h) => <HistoryView key={h.id} history={h} />)}
+        <div ref={historyContainerRef}>
+            {history.map((h) => <HistoryView key={h.id} history={h} />)}
+        </div>
         <ReadLine executing={executing} pwd={pwd} onSubmitCommand={submitCommand} onAbortCommand={handleAbortCommand} />
         <FullScreenApp req={fullScreenAppReq} />
     </div>

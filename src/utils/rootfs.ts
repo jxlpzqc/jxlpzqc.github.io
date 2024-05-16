@@ -1,7 +1,7 @@
 import { getCollection, type CollectionEntry } from "astro:content";
 import type { FileSystemItem } from "./filesystem";
 
-function _collectionsToForeast(blogs: CollectionEntry<'blog'>[]): FileSystemItem[] {
+function getPosts(blogs: CollectionEntry<'blog'>[]): FileSystemItem[] {
 
     let ret: FileSystemItem[] = [];
 
@@ -15,7 +15,7 @@ function _collectionsToForeast(blogs: CollectionEntry<'blog'>[]): FileSystemItem
                 current.push({
                     name: slug + ".md",
                     type: "file",
-                    tag: [],
+                    tag: blog.data.tags || [],
                     collectionObject: blog,
                 });
             } else {
@@ -63,7 +63,80 @@ function getRecents(blogs: CollectionEntry<'blog'>[]): FileSystemItem[] {
             name: noDupFilenameWithoutExt + ".md",
             type: "symlink",
             symlink: "/posts/" + blog.slug + ".md",
-            tag: [],
+            tag: blog.data.tags || [],
+            collectionObject: blog,
+        });
+    }
+    return ret;
+}
+
+function getTags(blogs: CollectionEntry<'blog'>[]): FileSystemItem[] {
+    const ret: FileSystemItem[] = [];
+    const tagMap: Map<string, FileSystemItem> = new Map();
+
+    for (const blog of blogs) {
+        const tags = blog.data.tags || [];
+        for (const tag of tags) {
+            let current = tagMap.get(tag);
+            if (current === undefined) {
+                current = {
+                    name: tag,
+                    type: "dir",
+                    tag: [],
+                    children: []
+                };
+                tagMap.set(tag, current);
+                ret.push(current);
+            }
+
+            let noDupFilenameWithoutExt = blog.slug.split("/").pop();
+            if (!noDupFilenameWithoutExt) {
+                continue;
+            }
+
+            current.children!.push({
+                name: noDupFilenameWithoutExt + ".md",
+                type: "symlink",
+                symlink: "/posts/" + blog.slug + ".md",
+                tag: blog.data.tags || [],
+                collectionObject: blog,
+            });
+        }
+    }
+
+    return ret;
+}
+
+function getArchives(blogs: CollectionEntry<'blog'>[]): FileSystemItem[] {
+    const ret: FileSystemItem[] = [];
+    const yearMap: Map<number, FileSystemItem> = new Map();
+
+    for (const blog of blogs) {
+        const pubDate = new Date(blog.data.pubDate);
+        const year = pubDate.getFullYear();
+
+        let current = yearMap.get(year);
+        if (current === undefined) {
+            current = {
+                name: year.toString(),
+                type: "dir",
+                tag: [],
+                children: []
+            };
+            yearMap.set(year, current);
+            ret.push(current);
+        }
+
+        let noDupFilenameWithoutExt = blog.slug.split("/").pop();
+        if (!noDupFilenameWithoutExt) {
+            continue;
+        }
+
+        current.children!.push({
+            name: noDupFilenameWithoutExt + ".md",
+            type: "symlink",
+            symlink: "/posts/" + blog.slug + ".md",
+            tag: blog.data.tags || [],
             collectionObject: blog,
         });
     }
@@ -92,12 +165,13 @@ export async function getRootFs(): Promise<FileSystemItem> {
             name: "posts",
             type: "dir",
             desc: "All posts",
-            children: _collectionsToForeast(await getCollection('blog')),
+            children: getPosts(await getCollection('blog')),
         },
         {
             name: "tags",
             type: "dir",
             desc: "Posts group by tags",
+            children: getTags(await getCollection('blog')),
         },
         {
             name: "recents",
@@ -109,6 +183,7 @@ export async function getRootFs(): Promise<FileSystemItem> {
             name: "archives",
             type: "dir",
             desc: "Posts group by year",
+            children: getArchives(await getCollection('blog')),
         },
         {
             name: "about.md",
