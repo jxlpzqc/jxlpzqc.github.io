@@ -1,6 +1,7 @@
 ---
-import type { FileSystemItem } from "@utils/filesystem";
+import { getFsItem, type FileSystemItem } from "@utils/filesystem";
 import ShellPage from "./ShellPage.astro";
+import ListTable from "@components/ListTable";
 
 export type Props = {
     path: string;
@@ -13,64 +14,29 @@ if (file.type !== "dir") {
     throw new Error("This is not a directory.");
 }
 
-const childern = file.children || [];
-
+const isListCurrent = path === file.absPath;
 const command = "ls " + (path === file.absPath ? "" : file.absPath);
+
+const currentFile = isListCurrent ? file : await getFsItem(path);
 ---
 
 <ShellPage currentPath={path} command={command}>
-    <div class="my-8" id="init-content" data-init-type="list">
-        <table class="table-auto w-full *:text-left posts-list">
-            <thead>
-                <tr>
-                    <th class="w-2/3">File</th>
-                    <th>Tag</th>
-                </tr>
-            </thead>
-            <tbody>
-                {
-                    childern.map((item) => (
-                        <tr>
-                            <td>
-                                <a
-                                    href={
-                                        item.symlink ||
-                                        (path == "/" ? "" : path) +
-                                            "/" +
-                                            item.name
-                                    }
-                                >
-                                    {item.name +
-                                        (item.type === "dir" ? "/" : "")}
-                                </a>
-                            </td>
-                        </tr>
-                    ))
-                }
-            </tbody>
-        </table>
-
-        <!-- <div class="border-t-2 border-black border-dashed mt-4 pt-4">
-            <div>There are total {collection.length} files, showing 1-10.</div>
-            <div>Use `prev` or `next` command to navigate.</div>
-            <div class="flex justify-between mt-4">
-                <a>⬅️ Go Prev</a>
-                <a>Go Next ➡️</a>
+    {
+        isListCurrent ? (
+            <div class="my-8" id="init-content" data-init-type="list">
+                <ListTable file={currentFile} />
             </div>
-        </div> -->
-    </div>
+        ) : (
+            <>
+                <div class="my-8">
+                    <ListTable file={file} />
+                </div>
+                <div class="hidden">
+                    <div class="my-8" id="init-content" data-init-type="list">
+                        <ListTable file={currentFile} />
+                    </div>
+                </div>
+            </>
+        )
+    }
 </ShellPage>
-
-<style>
-    .posts-list thead::after {
-        content: "";
-        display: table-row;
-        height: 1rem;
-    }
-    .posts-list tbody::before {
-        content: "";
-        display: table-row;
-        height: 1rem;
-        @apply border-t-2 border-black border-dashed;
-    }
-</style>

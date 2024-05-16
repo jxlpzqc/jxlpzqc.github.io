@@ -1,0 +1,12 @@
+.posts-list thead::after {
+    content: "";
+    display: table-row;
+    height: 1rem;
+}
+
+.posts-list tbody::before {
+    content: "";
+    display: table-row;
+    height: 1rem;
+    @apply border-t-2 border-black border-dashed;
+}
