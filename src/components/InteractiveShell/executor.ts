@@ -1,66 +1,7 @@
 import type { CommandHistory } from ".";
 import type { FullScreenAppRequest } from "./FullScreenApp";
+import { fetchContent, getAbsoluteDir } from "./fetchContent";
 import { parseCommand } from "./parser";
-
-export async function fetchItem(dir: string): Promise<{
-    success: boolean;
-    failMessage?: string;
-    type?: string;
-    element?: HTMLElement;
-}> {
-    let url = dir;
-    try {
-        let type: string = "";
-        let element: HTMLElement | null;
-        do {
-            const res = await fetch(url);
-            if (res.status === 404) {
-                return { success: false, failMessage: "No such file or directory." };
-            } else if (res.status < 200 || res.status >= 400) {
-                return { success: false, failMessage: "Failed to fetch item." };
-            }
-            const text = await res.text();
-            const dom = new DOMParser().parseFromString(text, "text/html");
-            element = dom.getElementById("init-content");
-
-            type = element?.dataset?.initType || "";
-            if (!type) throw new Error("No type.");
-            if (type === "symlink") {
-                const linkUrl = element?.dataset?.linkUrl;
-                if (!linkUrl) throw new Error("No linkUrl.");
-                url = linkUrl;
-            }
-        } while (type === "symlink");
-        if (element && type) {
-            return { success: true, type, element: element };
-        }
-        return { success: false, failMessage: "Failed to fetch item." };
-    }
-    catch (e) {
-        return { success: false, failMessage: "Unknown error." };
-    }
-}
-
-export function getAbsoluteDir(dir: string, pwd: string): string {
-    if (dir.startsWith("/") || dir.startsWith("~")) {
-        return dir;
-    }
-    // handle '..' and '.'
-    const dirList = dir.split("/");
-    const pwdList = pwd.split("/");
-    if (pwdList[pwdList.length - 1] === "") {
-        pwdList.pop();
-    }
-    for (const d of dirList) {
-        if (d === "..") {
-            pwdList.pop();
-        } else if (d !== ".") {
-            pwdList.push(d);
-        }
-    }
-    const result = pwdList.join("/");
-    return result.startsWith("/") ? result : "/" + result;
-}
 
 type CommandExecResult = {
     histories: CommandHistory[];
@@ -90,12 +31,13 @@ export function* executeCommand(command: string, pwd: string, history: CommandHi
         //     message: "Fetching content from remote... "
         // });
         try {
-            const result = await fetchItem(path);
+            const result = await fetchContent(path);
             if (result.success) {
                 if (type === 'cd') {
                     if (result.type === "list") {
                         newCommandHistory.runningStatusList = [];
                         newPwd = path;
+                        window.history.pushState({}, "", newPwd);
                     } else {
                         newCommandHistory.runningStatusList?.push({
                             type: "fail",
@@ -188,7 +130,6 @@ export function* executeCommand(command: string, pwd: string, history: CommandHi
                 newCommandHistory.runningStatusList = [{ type: "fail", message: "cd: no argument." }];
                 continue;
             }
-            window.history.pushState({}, "", inputDir);
             inputDir = getAbsoluteDir(inputDir, pwd);
             yield getRemoteCommandResult(inputDir, 'cd');
         } else if (action.type === "viewPost") {

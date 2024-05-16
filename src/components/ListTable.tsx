@@ -9,7 +9,7 @@ export type Props = {
 function ItemView({ item }: { item: FileSystemItem }) {
     return <tr>
         <td>
-            <a href={item.symlink || item.absPath} >
+            <a href={item.symlink || item.absPath} className="file-name">
                 {item.name + (item.type === "dir" ? "/" : "")}
             </a>
         </td>

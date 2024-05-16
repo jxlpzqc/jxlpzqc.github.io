@@ -1,6 +1,7 @@
 import ShellPrompt from "@components/ShellPrompt";
 import { useEffect, useRef, useState } from "react";
 import { appendHistories, getHistories } from "./historyStorage";
+import { getSuggestionList } from "./fetchContent";
 
 type Props = {
     // when executing, keyboard input will be saved, just hide the prompy
@@ -10,6 +11,173 @@ type Props = {
     onAbortCommand?: (command: string) => void;
 };
 
+type SuggestionListProps = {
+    word: string;
+    pwd: string;
+    onSelected?: (v: string) => void;
+    onClose?: () => void;
+};
+
+function SuggestionList({ word, pwd, onSelected, onClose }: SuggestionListProps) {
+
+    // calculate row and column
+
+    // get current actual width
+
+    const [selected, _setSelected] = useState(-1);
+    const [suggestions, setSuggestions] = useState<string[]>([]);
+    const [loading, setLoading] = useState(false);
+
+    useEffect(() => {
+        let diposed = false;
+
+        setLoading(true);
+        getSuggestionList(word, pwd)
+            .then((suggestions) => {
+                if (diposed) return;
+                setSuggestions(suggestions);
+                if (suggestions.length === 0) onClose?.();
+            })
+            .catch((e) => {
+                console.error(e);
+                if (diposed) return;
+                onClose?.();
+            })
+            .finally(() => {
+                if (diposed) return;
+                setLoading(false);
+            });
+
+        return () => {
+            diposed = true;
+        }
+    }, []);
+
+    const setSelected = (v: number) => {
+        if (suggestions.length === 0) return;
+        let res = v % suggestions.length;
+        res = res < 0 ? res + suggestions.length : res;
+        _setSelected(res);
+        onSelected?.(suggestions[res]);
+    }
+
+    const [cols, setCols] = useState(-1);
+
+    const listRef = useRef<HTMLDivElement>(null);
+
+    // auto focus
+    useEffect(() => {
+        listRef.current?.focus();
+    }, [listRef.current]);
+
+    // get cols
+    useEffect(() => {
+        const ele = listRef.current;
+        if (!ele) return;
+        const width = ele.clientWidth;
+
+        if (suggestions.length <= 1) {
+            setCols(1);
+            return;
+        }
+
+        // get em width
+        const pxPerEm = parseFloat(getComputedStyle(ele).fontSize)
+
+        const chWidth = pxPerEm * 0.7;
+
+        const GAP = chWidth * 2;
+
+        // first use 1 col to layout, and increase cols until the width is enough
+        let col = 2;
+        while (true) {
+            let cw = 0; // count width
+            let success = true;
+
+            const linesPerCol = Math.ceil(suggestions.length / col);
+
+            for (let i = 0; i < col; ++i) {
+                // get max width of current column
+                const currentColumnWidth = (suggestions.slice(i * linesPerCol, (i + 1) * linesPerCol)
+                    .reduce((max, v) => Math.max(max, v.length), 0)) * chWidth;
+                cw += currentColumnWidth;
+                cw += GAP;
+                if (cw > width) {
+                    success = false;
+                    break;
+                }
+            }
+
+            if (col === suggestions.length) {
+                break;
+            }
+
+            if (!success) {
+                col--;
+                break;
+            }
+            col++;
+        }
+        setCols(col);
+    }, [suggestions]);
+
+    const rows = Math.ceil(suggestions.length / cols);
+    const handleKeyDown = (e: React.KeyboardEvent) => {
+        let keyHandled = true;
+
+        if (e.key === "ArrowUp" || (e.shiftKey && e.key == "Tab")) {
+            setSelected((selected - 1));
+        } else if (e.key === "ArrowDown" || (!e.shiftKey && e.key == "Tab")) {
+            setSelected((selected + 1));
+        } else if (e.key === "ArrowLeft") {
+            setSelected((selected - rows));
+        } else if (e.key === "ArrowRight") {
+            setSelected((selected + rows));
+        } else if (e.key === "Enter") {
+            onClose?.();
+        } else {
+            keyHandled = false;
+            onClose?.();
+        }
+
+        if (keyHandled) {
+            e.stopPropagation();
+            e.preventDefault();
+        }
+    }
+
+    useEffect(() => {
+        if (suggestions.length === 1) {
+            onSelected?.(suggestions[0]);
+            onClose?.();
+        }
+    }, [suggestions]);
+
+    return <div ref={listRef} onBlur={() => { onClose?.(); }} tabIndex={-1} onKeyDown={handleKeyDown}
+        className="focus:outline-none" // remove when debugging
+    >
+        {
+            loading ? <div>Loading suggestions...</div> : (
+                suggestions.length !== 0 &&
+                <div
+                    className="w-full grid" style={{
+                        gridTemplateRows: `repeat(${rows}, auto)`,
+                        gridTemplateColumns: `repeat(${cols}, auto)`,
+                        gridAutoFlow: "column",
+                        gap: "0 0.5em",
+                    }}>
+                    {
+                        suggestions.map((s, i) => (
+                            <span key={s} className={`cursor-pointer ${selected === i ? "bg-black text-white" : ""}`}
+                                onClick={() => onSelected?.(s)}>{s}</span>
+                        ))
+                    }
+                </div>
+            )
+        }
+    </div>
+}
+
 
 export default function ReadLine({ executing, pwd, onSubmitCommand, onAbortCommand }: Props) {
 
@@ -17,6 +185,10 @@ export default function ReadLine({ executing, pwd, onSubmitCommand, onAbortComma
     const [cursorPosition, setCursorPosition] = useState(0);
 
     const hisPos = useRef<number>(-1);
+
+    const currentWord = command.slice(0, cursorPosition).split(/\s+/).pop() || "";
+    const isCursorWordEnd = cursorPosition === command.length || command[cursorPosition] === " ";
+    const [showSuggestion, setShowSuggestion] = useState(false);
 
     //#region cursor movement and line edit
 
@@ -71,6 +243,13 @@ export default function ReadLine({ executing, pwd, onSubmitCommand, onAbortComma
         setCursorPosition(cursorPosition + str.length);
     }
 
+    const replaceCurrentWord = (str: string) => {
+        setCommand(
+            command.slice(0, cursorPosition - currentWord.length) +
+            str + command.slice(cursorPosition));
+        setCursorPosition(cursorPosition - currentWord.length + str.length);
+    }
+
     const previousCommand = () => {
         const his = getHistories();
         if (hisPos.current === -1) hisPos.current = his.length - 1;
@@ -95,11 +274,11 @@ export default function ReadLine({ executing, pwd, onSubmitCommand, onAbortComma
         }
     };
 
-    const openOrNextSuggestion = () => { 
-        //TODO: implement openOrNextSuggestion
+    const openOrNextSuggestion = () => {
+        if (isCursorWordEnd) setShowSuggestion(true);
     }
-    const openAndpreviousSuggestion = () => { 
-        //TOOD: implement openAndpreviousSuggestion
+    const openAndpreviousSuggestion = () => {
+        if (isCursorWordEnd) setShowSuggestion(true);
     }
 
     //#endregion
@@ -172,8 +351,16 @@ export default function ReadLine({ executing, pwd, onSubmitCommand, onAbortComma
         }
     });
 
-    return !executing && <ShellPrompt currentPath={pwd} command={command}
-        hasCursor={true} cursorPosition={cursorPosition} />
+    return !executing &&
+        <>
+            <ShellPrompt currentPath={pwd} command={command}
+                hasCursor={true} cursorPosition={cursorPosition} />
+            {showSuggestion && <SuggestionList word={currentWord}
+                pwd={pwd}
+                onSelected={(v) => { replaceCurrentWord(v); }}
+                onClose={() => { setShowSuggestion(false); }} />
+            }
+        </>
 
 
 }

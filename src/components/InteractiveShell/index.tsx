@@ -34,8 +34,8 @@ function HistoryView({ history }: { history: CommandHistory }) {
     return <div className="pb-4">
         <ShellPrompt currentPath={history.path} command={history.command} />
         {
-            history.runningStatusList?.map((status) => (
-                <div className="flex flex-row items-center">
+            history.runningStatusList?.map((status, i) => (
+                <div key={i} className="flex flex-row items-center">
                     {/* dot indicator */}
                     {status.type === "running" && <span className="flex w-2 h-2 me-3 rounded-full bg-blue-300 animate-pulse"></span>}
                     {status.type === "success" && <span className="flex w-2 h-2 me-3 rounded-full bg-green-500"></span>}
