@@ -35,8 +35,8 @@ export default function (props: Props) {
     return (<table className="table-auto w-full *:text-left posts-list">
         <thead>
             <tr>
-                <th>Title / Desc</th>
                 <th>File Name</th>
+                <th>Title / Desc</th>
                 <th>Tags</th>
             </tr>
         </thead>
