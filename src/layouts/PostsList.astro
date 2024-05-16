@@ -7,16 +7,18 @@ export type Props = {
     file: FileSystemItem;
 };
 
-const { file: dirFile, path: currentPath } = Astro.props;
+const { file, path } = Astro.props;
 
-if (dirFile.type !== "dir") {
+if (file.type !== "dir") {
     throw new Error("This is not a directory.");
 }
 
-const childern = dirFile.children || [];
+const childern = file.children || [];
+
+const command = "ls " + (path === file.absPath ? "" : file.absPath);
 ---
 
-<ShellPage currentPath={currentPath} command="ls">
+<ShellPage currentPath={path} command={command}>
     <div class="my-8" id="init-content" data-init-type="list">
         <table class="table-auto w-full *:text-left posts-list">
             <thead>
@@ -33,9 +35,7 @@ const childern = dirFile.children || [];
                                 <a
                                     href={
                                         item.symlink ||
-                                        (currentPath == "/"
-                                            ? ""
-                                            : currentPath) +
+                                        (path == "/" ? "" : path) +
                                             "/" +
                                             item.name
                                     }

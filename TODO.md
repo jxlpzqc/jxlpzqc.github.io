@@ -4,7 +4,7 @@
 - [ ] readline suggestions
 - [x] less
 - [x] slug to tree
-- [ ] index page
+- [x] index page
 - [ ] Header
 - [ ] customization
 - [x] readline ctrl+c ctrl+d ctrl+l

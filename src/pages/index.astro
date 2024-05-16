@@ -1,0 +1,10 @@
+---
+import PostsList from "@layouts/PostsList.astro";
+import { getFsItem } from "@utils/filesystem";
+
+
+const path = "/";
+const file = await getFsItem("/recents");
+---
+
+<PostsList path={path} file={file} />
