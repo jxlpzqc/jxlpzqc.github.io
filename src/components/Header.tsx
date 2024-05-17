@@ -50,7 +50,7 @@ export const Header = () => {
     const [open, setOpen] = useState(false);
 
     return (
-        <header className="sticky top-0 bg-yellow-50 z-20 shadow-md">
+        <header className="sticky top-0 bg-yellow-50 dark:bg-black z-20 shadow-md  dark:shadow-none dark:border-b-2 dark:border-gray-500">
             <div className={`flex flex-wrap justify-between items-center
              max-w-screen-md px-8 mx-auto sm:!h-[80px] ${open ? "h-fit" : "h-[80px]"}`}>
                 <a href="/" className="text-xs font-bold leading-3">

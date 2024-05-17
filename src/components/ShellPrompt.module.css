@@ -15,5 +15,5 @@
 .cursor {
     animation: blink 1s step-end infinite;
     height: 24px;
-    @apply bg-black align-top inline-block w-3 absolute;
+    @apply bg-black dark:bg-white align-top inline-block w-3 absolute;
 }

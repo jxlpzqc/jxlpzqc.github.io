@@ -100,30 +100,29 @@ export default function LessApp(props: Props) {
 
     let bottomLeftElement = null;
 
-    if (message || !scrollPercentage) {
-        bottomLeftElement = <span className="bg-black text-white px-2">{message || props.filename}</span>;
-    } else if (scrollPercentage === "100%") {
-        <span className="bg-black text-white px-2">(END)</span>
+    if (message || !scrollPercentage || scrollPercentage === "100%") {
+        const msg = message || (scrollPercentage === "100%" ? "END" : props.filename);
+        bottomLeftElement = <span className="bg-black text-white dark:bg-white dark:text-black  px-2">{msg}</span>;
     } else if (scrollPercentage !== "" && scrollPercentage !== "100%") {
         bottomLeftElement = <>
             <span className="px-1 font-extrabold">:</span>
             <span
-                className="animate-cursor-blink bg-black align-bottom inline-block w-3"
+                className="bg-black dark:bg-white align-bottom inline-block w-3"
                 style={{ height: '24px' }}></span>
         </>;
     }
 
-    return (<div ref={appRef} className="w-full h-full overflow-auto bg-yellow-50 focus:outline-none"
+    return (<div ref={appRef} className="w-full h-full overflow-auto bg-yellow-50 dark:bg-black focus:outline-none"
         tabIndex={-1} onKeyDown={handleKeyDown}
         onScroll={handleScroll}
     >
         <div className="p-8 max-w-screen-md m-auto less-app-content" ref={contentRef}></div>
         {/* close button */}
         <div className="fixed top-0 left-0">
-            <button className="hover:bg-red-400 opacity-30 hover:opacity-100 transition-all p-4" onClick={props.onExit}>
+            <button className="hover:bg-red-400 opacity-30 hover:opacity-100 transition-all p-4 *:stroke-black dark:*:stroke-white" onClick={props.onExit}>
                 {/* X SVG */}
                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
-                    stroke="black" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"
+                    strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"
                 >
                     <line x1="18" y1="6" x2="6" y2="18" className="close"></line>
                     <line x1="6" y1="6" x2="18" y2="18" className="close"></line>
@@ -132,7 +131,7 @@ export default function LessApp(props: Props) {
         </div>
 
         {/* status bar */}
-        <div className="fixed bg-yellow-50 bottom-0 flex text-lg justify-between" style={{
+        <div className="fixed bg-yellow-50 dark:bg-black bottom-0 flex text-lg justify-between" style={{
             width: 'calc(100% - 20px)',
         }}>
             <div>{bottomLeftElement}</div>
