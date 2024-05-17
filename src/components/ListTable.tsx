@@ -1,5 +1,5 @@
 import type { FileSystemItem } from "@utils/filesystem";
-import "./ListTable.css"
+import classes from "./ListTable.module.css"
 import { SITE } from "@config"
 
 export type Props = {
@@ -16,7 +16,9 @@ function ItemView({ item }: { item: FileSystemItem }) {
         </td>
 
         <td>
-            <div className="text-gray-500">{item.collectionObject?.data?.title || item.desc || item.name}</div>
+            <a href={item.symlink || item.absPath} className={`${classes['mobile-a']}`}>
+                {item.collectionObject?.data?.title || item.desc || item.name}
+            </a>
         </td>
 
         <td>
@@ -39,7 +41,7 @@ export default function (props: Props) {
                 The directory contains too many files, you may
                 <a href="" className="text-blue-700" data-command="less"> pipe to less (C-h)</a>.
             </div>}
-            <table className="table-auto w-full *:text-left posts-list">
+            <table className={`table-auto w-full *:text-left ${classes['posts-list']}`}>
                 <thead>
                     <tr>
                         <th>File Name</th>

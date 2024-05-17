@@ -1,0 +1,26 @@
+.posts-list thead::after {
+    content: "";
+    display: table-row;
+    height: 1rem;
+}
+
+.posts-list tbody::before {
+    content: "";
+    display: table-row;
+    height: 1rem;
+    @apply border-t-2 border-black border-dashed;
+}
+
+/* hide first col in mobile */
+.posts-list td:first-child,
+.posts-list th:first-child {
+    @apply hidden md:table-cell;
+}
+
+.posts-list a {
+    @apply text-blue-700 underline;
+}
+
+.posts-list .mobile-a {
+    @apply md:text-inherit md:no-underline;
+}

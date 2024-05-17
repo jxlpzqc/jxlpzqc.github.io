@@ -120,7 +120,7 @@ export default function LessApp(props: Props) {
         <div className="p-8 max-w-screen-md m-auto less-app-content" ref={contentRef}></div>
         {/* close button */}
         <div className="fixed top-0 left-0">
-            <button className="hover:bg-yellow-500 opacity-30 hover:opacity-100 transition-all p-4" onClick={props.onExit}>
+            <button className="hover:bg-red-400 opacity-30 hover:opacity-100 transition-all p-4" onClick={props.onExit}>
                 {/* X SVG */}
                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
                     stroke="black" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"
