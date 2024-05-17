@@ -26,7 +26,7 @@ const MenuButton = ({ open, onClick }: {
             viewBox="0 0 24 24"
             fill="none"
             stroke="currentColor"
-            strokeWidth="1.5"
+            strokeWidth="2"
             strokeLinecap="round"
             strokeLinejoin="round"
             className="menu-icon"
@@ -58,7 +58,7 @@ export const Header = () => {
                     <pre>{logo}</pre>
                 </a>
 
-                <div className="self-end sm:hidden">
+                <div className="self-center sm:hidden">
                     <MenuButton open={open} onClick={() => setOpen(!open)} />
                 </div>
                 <div className="w-full sm:w-0"></div>
