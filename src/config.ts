@@ -7,11 +7,15 @@ export type Site = {
     ogImage: string;
     shHostname: string;
     shUsername: string;
-    logo: string;
+    logoText?: string;
+    /**
+     * when logo image is provided, the logoText will be ignored
+     */
+    logoImg?: string;
 };
 
 // use figlet to generate a logo
-const logo = `  ___ _                     _
+const logoText = `  ___ _                     _
  / __| |_  ___ _ _  __ _ __(_)
 | (__| ' \\/ -_) ' \\/ _\` |_ / |
  \\___|_||_\\___|_||_\\__, /__|_|
@@ -28,5 +32,6 @@ export const SITE: Site = {
     ogImage: "astropaper-og.jpg",
     shHostname: "blog",
     shUsername: "chengzi",
-    logo: logo
+    logoText: logoText,
+    logoImg: "/logo.svg", 
 };

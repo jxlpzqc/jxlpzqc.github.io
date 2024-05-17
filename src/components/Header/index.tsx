@@ -2,8 +2,6 @@ import { useState } from "react";
 import styles from "./index.module.css"
 import { SITE } from "@config";
 
-const logo = SITE.logo;
-
 const MenuButton = ({ open, onClick }: {
     open: boolean;
     onClick: () => void;
@@ -51,7 +49,11 @@ export const Header = () => {
             <div className={`flex flex-wrap justify-between items-center
              max-w-screen-md px-8 mx-auto sm:!h-[80px] ${open ? "h-fit" : "h-[80px]"}`}>
                 <a href="/" className="text-xs font-bold leading-3">
-                    <pre>{logo}</pre>
+                    {
+                        SITE.logoImg ?
+                            <img className="h-[60px]" src="/logo.svg" alt="logo" /> :
+                            <pre>{SITE.logoText}</pre>
+                    }
                 </a>
 
                 <div className="self-center sm:hidden">
