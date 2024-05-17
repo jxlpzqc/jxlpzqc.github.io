@@ -102,24 +102,24 @@ export default function LessApp(props: Props) {
 
     if (message || !scrollPercentage || scrollPercentage === "100%") {
         const msg = message || (scrollPercentage === "100%" ? "END" : props.filename);
-        bottomLeftElement = <span className="bg-black text-white dark:bg-white dark:text-black  px-2">{msg}</span>;
+        bottomLeftElement = <span className="bg-term-normal text-term-bg px-2">{msg}</span>;
     } else if (scrollPercentage !== "" && scrollPercentage !== "100%") {
         bottomLeftElement = <>
             <span className="px-1 font-extrabold">:</span>
             <span
-                className="bg-black dark:bg-white align-bottom inline-block w-3"
+                className="bg-term-normal align-bottom inline-block w-3"
                 style={{ height: '24px' }}></span>
         </>;
     }
 
-    return (<div ref={appRef} className="w-full h-full overflow-auto bg-yellow-50 dark:bg-black focus:outline-none"
+    return (<div ref={appRef} className="w-full h-full overflow-auto bg-term-bg focus:outline-none"
         tabIndex={-1} onKeyDown={handleKeyDown}
         onScroll={handleScroll}
     >
         <div className="p-8 max-w-screen-md m-auto less-app-content" ref={contentRef}></div>
         {/* close button */}
         <div className="fixed top-0 left-0">
-            <button className="hover:bg-red-400 opacity-30 hover:opacity-100 transition-all p-4 *:stroke-black dark:*:stroke-white" onClick={props.onExit}>
+            <button className="hover:bg-red-400 opacity-30 hover:opacity-100 transition-all p-4 *:stroke-term-normal" onClick={props.onExit}>
                 {/* X SVG */}
                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
                     strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"
@@ -131,7 +131,7 @@ export default function LessApp(props: Props) {
         </div>
 
         {/* status bar */}
-        <div className="fixed bg-yellow-50 dark:bg-black bottom-0 flex text-lg justify-between" style={{
+        <div className="fixed bg-term-bg bottom-0 flex text-lg justify-between" style={{
             width: 'calc(100% - 20px)',
         }}>
             <div>{bottomLeftElement}</div>

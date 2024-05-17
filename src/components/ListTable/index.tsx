@@ -39,7 +39,7 @@ export default function (props: Props) {
         <div className="command-result">
             {children.length > SITE.listLimitSize && <div className="my-4">
                 The directory contains too many files, you may
-                <a href="" className="text-blue-700" data-command="less"> pipe to less (C-h)</a>.
+                <a href="" className="text-term-blue" data-command="less"> pipe to less (C-h)</a>.
             </div>}
             <table className={`table-auto w-full *:text-left ${classes['posts-list']}`}>
                 <thead>

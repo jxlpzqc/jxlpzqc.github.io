@@ -42,7 +42,7 @@ const metaDate =
                             {post.data.tags.map((tag) => (
                                 <a
                                     href={`/tags/${tag}`}
-                                    class="text-blue-500 hover:underline"
+                                    class="text-term-blue hover:underline"
                                 >
                                     {tag}
                                 </a>
@@ -62,7 +62,7 @@ const metaDate =
             </button>
         </div>
 
-        <article role="article" class="prose dark:prose-invert prose-lg max-w-screen-md">
+        <article role="article" class="prose prose-gray dark:prose-invert prose-lg max-w-screen-md">
             <Content />
         </article>
     </div>

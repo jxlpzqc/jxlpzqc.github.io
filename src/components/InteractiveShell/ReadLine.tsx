@@ -170,7 +170,7 @@ function SuggestionList({ word, pwd, onSelected, onClose }: SuggestionListProps)
                     }}>
                     {
                         suggestions.map((s, i) => (
-                            <span key={s} className={`cursor-pointer ${selected === i ? "bg-black text-white dark:bg-white dark:text-black" : ""}`}
+                            <span key={s} className={`cursor-pointer ${selected === i ? "bg-term-normal text-term-bg" : ""}`}
                                 onClick={() => onSelected?.(s)}>{s}</span>
                         ))
                     }

@@ -4,28 +4,34 @@
 
 @layer base {
     :root {
-        --color-bg: #fefce8;
-        --color-fg: black;
+        --color-term-bg: rgb(254 252 232);
+        --color-term-blue: rgb(29 78 216);
+        --color-term-green: rgb(21 128 61);
+        --color-term-normal: black;
     }
 
     @media (prefers-color-scheme: dark) {
         :root {
-            --color-bg: black;
-            --color-fg: white;
+            --color-term-bg: rgb(41 41 41);
+            --color-term-green: rgb(134 239 172);
+            --color-term-blue: rgb(147 197 253);
+            --color-term-normal: white;
         }
     }
 }
+
+/* button style */
 
 button.btn-primary {
     @apply px-4 py-1 bg-yellow-700 text-white transition-colors;
 }
 
 button.btn-primary:hover {
-    @apply bg-yellow-800 ;
+    @apply bg-yellow-800;
 }
 
 button.btn-primary:active {
-    @apply bg-yellow-900 ;
+    @apply bg-yellow-900;
 }
 
 .less-app-content .toolbar-button {
