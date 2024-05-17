@@ -101,7 +101,12 @@ export function InteractiveShell({ originPwd }: { originPwd: string }) {
 
     // catch browser history change event
     const handlePopState = (e: PopStateEvent) => {
-        const path = window.location.pathname;
+        sendGoCommand();
+        e.preventDefault();
+    }
+
+    const sendGoCommand = (path: string | undefined = undefined) => {
+        if (path === undefined) path = window.location.pathname;
         // close full screen app
         sendFullScreenAppReq(undefined);
         submitCommand(`go ${path}`);
@@ -109,14 +114,19 @@ export function InteractiveShell({ originPwd }: { originPwd: string }) {
 
     const handleLinkClick = (e: MouseEvent) => {
         if (e.target instanceof HTMLAnchorElement) {
-            e.preventDefault();
+            // blur the link to accept input
+            e.target.blur();
+
             const path = e.target.getAttribute("href");
+            // if path is anchor, do default behavior
+            if (path?.startsWith("#")) {
+                return;
+            }
+            e.preventDefault();
             if (path) {
                 window.history.pushState({}, "", path);
-                window.dispatchEvent(new PopStateEvent('popstate'));
+                sendGoCommand(path);
             }
-            // unfocus the link
-            e.target.blur();
         }
     }
 

@@ -14,7 +14,7 @@
 /* hide first col in mobile */
 .posts-list td:first-child,
 .posts-list th:first-child {
-    @apply hidden md:table-cell;
+    @apply hidden sm:table-cell;
 }
 
 .posts-list a {
@@ -22,5 +22,5 @@
 }
 
 .posts-list .mobile-a {
-    @apply md:text-inherit md:no-underline;
+    @apply sm:text-inherit sm:no-underline;
 }
