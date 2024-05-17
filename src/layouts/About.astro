@@ -1,0 +1,40 @@
+---
+import ShellPage from "./ShellPage.astro";
+
+export type Props = {
+    frontmatter: {
+        title?: string;
+        url?: string;
+    };
+};
+
+const { title, url } = Astro.props.frontmatter;
+---
+
+<ShellPage currentPath="/" command={"cat about.md"}>
+    <div
+        class="command-result mb-8 mt-4"
+        id="init-content"
+        data-init-type="file"
+    >
+        <h1 class="text-5xl font-bold mb-4">{title || "About"}</h1>
+
+        <div class="my-4 flex gap-4 flex-wrap text-sm">
+            <button class="btn-primary hidden-in-less" data-command="less">
+                Pipe to less (C-h)
+            </button>
+            <button
+                class="btn-primary hidden-in-less"
+                data-command="copylink"
+                data-link={url}
+            >
+                Copy link
+            </button>
+        </div>
+
+        <article role="article" class="prose prose-gray dark:prose-invert prose-lg max-w-screen-md prose-h1:text-4xl">
+            <slot/>
+        </article>
+
+    </div>
+</ShellPage>

@@ -1,0 +1,18 @@
+{
+  "Frontmatter": {
+    "scope": "markdown",
+    "prefix": "frontmatter",
+    "body": [
+      "---",
+      "title: $1",
+      "pubDate: $CURRENT_YEAR-$CURRENT_MONTH-${CURRENT_DATE}",
+      "heroImage: $2",
+      "tags:",
+      "  - $3",
+      "description: $4",
+      "repost: ${5|false,true|}",
+      "---",
+    ],
+    "description": "Adds the frontmatter block for the AstroPaper Blog post"
+  },
+}

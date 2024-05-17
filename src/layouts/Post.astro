@@ -3,6 +3,9 @@ import ShellPage from "./ShellPage.astro";
 import type { CollectionEntry } from "astro:content";
 import type { FileSystemItem } from "@utils/filesystem";
 
+import {normalize} from "path";
+import { Image } from "astro:assets";
+
 export type Props = {
     post: CollectionEntry<"blog">;
     path: string;
@@ -23,21 +26,46 @@ const metaDate =
     (post.data.updatedDate
         ? `, updated on ${formatDate(post.data.updatedDate)}`
         : "");
+
+let imageUrl :any;
+
+if (post.data.heroImage) {
+    if (post.data.heroImage.startsWith("http")) {
+        imageUrl = post.data.heroImage
+    } else if (post.data.heroImage.startsWith("/")) {
+        imageUrl = post.data.heroImage
+    } else {
+        const path = normalize("/src/content/blog/" + post.id.substring(
+            0,
+            post.id.lastIndexOf("/") + 1
+        ) + post.data.heroImage).replace(/\\/g, "/");
+
+        const images = import.meta.glob('/src/content/**/*.{svg,jpeg,jpg,png,gif}');
+        
+        if (!images[path]) {
+            console.error("[WARN] Image not found: " + path);
+        } else {
+            imageUrl = images[path]();
+        }
+    }
+}
+
+
 ---
 
 <ShellPage currentPath={path} command={"cat " + file.absPath}>
     <div class="command-result mb-8 mt-4" id="init-content" data-init-type="file">
         {
             post.data.heroImage && (
-                <img
-                    src={post.data.heroImage}
+                <Image
+                    src={imageUrl}
                     alt={post.data.title}
-                    class="w-full max-h-64 object-cover rounded-lg"
+                    class="w-full max-h-64 object-cover rounded-lg my-4"
                 />
             )
         }
 
-        <h1 class="text-3xl font-bold flex-1">
+        <h1 class="text-5xl font-bold flex-1">
             {post.data.title}
         </h1>
         <!-- article meta -->
@@ -80,7 +108,7 @@ const metaDate =
             </button>
         </div>
 
-        <article role="article" class="prose prose-gray dark:prose-invert prose-lg max-w-screen-md">
+        <article role="article" class="prose prose-gray dark:prose-invert prose-lg max-w-screen-md prose-h1:text-4xl">
             <Content />
         </article>
     </div>
