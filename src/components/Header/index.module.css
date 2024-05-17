@@ -1,9 +1,9 @@
 nav.main-nav {
-    @apply self-center text-lg font-bold;
+    @apply self-center text-lg font-bold transition-all overflow-hidden;
 }
 
 nav.main-nav ul {
-    @apply mt-4 sm:mt-0 sm:flex sm:gap-8;
+    @apply py-4 sm:py-0 sm:flex sm:gap-8 sm:h-fit transition-all;
 }
 
 nav.main-nav ul li {
