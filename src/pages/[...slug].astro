@@ -13,7 +13,7 @@ export type Props = {
 };
 
 export const getStaticPaths = (async () => {
-    const IGNORE_LIST = ["/"];
+    const IGNORE_LIST = ["/", "/about.md"];
     const items = await getAllFsItems();
 
     return items
