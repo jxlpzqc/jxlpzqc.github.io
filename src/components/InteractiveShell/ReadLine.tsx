@@ -310,7 +310,6 @@ export default function ReadLine({ executing, pwd, onSubmitCommand, onAbortComma
         else if (ctrl && e.key === "k") setCommand(command.slice(0, cursorPosition)); // delete from cursor to the end of the line
         else if (ctrl && e.key === "u") { setCommand(command.slice(cursorPosition)); setCursorPosition(0); } // delete from cursor to the beginning of the line
         // ctrl + c, ctrl + d
-        // TODO: handle ctrl + c, ctrl + d
         // if not ctrl, insert the character
         else if (!ctrl && e.key.length == 1) insert(e.key);
         else if (e.key === "Enter") submit();
@@ -321,6 +320,8 @@ export default function ReadLine({ executing, pwd, onSubmitCommand, onAbortComma
             if (selectedText) {
                 navigator.clipboard.writeText(selectedText);
             }
+            e.preventDefault();
+            keyHandled = false;
         }
         else if (ctrl && e.key === "l") { setCommand(""); setCursorPosition(0); onSubmitCommand("clear"); }
         else if (!alt && !shift && e.key === "Tab") openOrNextSuggestion();

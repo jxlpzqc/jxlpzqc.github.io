@@ -1,4 +1,4 @@
 TODO:
-- [ ] env
+- [ ] env: GO_USE_LESS=1
 - [ ] cache
-- [ ] customization
+- [ ] mobile keyboard and ime support
