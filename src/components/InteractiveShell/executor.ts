@@ -26,10 +26,6 @@ export function* executeCommand(command: string, pwd: string, history: CommandHi
     let newPwd = pwd;
 
     const getRemoteCommandResult = async (path: string, type: 'cd' | 'ls' | 'cat' | 'go' | 'less') => {
-        // newCommandHistory.runningStatusList?.push({
-        //     type: "running",
-        //     message: "Fetching content from remote... "
-        // });
         try {
             const result = await fetchContent(path);
             if (result.success) {
@@ -142,6 +138,16 @@ export function* executeCommand(command: string, pwd: string, history: CommandHi
             yield getRemoteCommandResult(path, 'ls');
         } else if (action.type === 'go') {
             let path = action.path!;
+            if (path.startsWith("http://") || path.startsWith("https://")
+                || path.startsWith("//")) {
+                newCommandHistory.runningStatusList?.push({
+                    type: "success",
+                    message: "External link, redirecting..."
+                });
+
+                window.location.href = path;
+                yield { histories: newHistory, pwd: newPwd };
+            }
             path = getAbsoluteDir(path, pwd);
             yield getRemoteCommandResult(path, 'go');
         } else if (action.type === "empty") {

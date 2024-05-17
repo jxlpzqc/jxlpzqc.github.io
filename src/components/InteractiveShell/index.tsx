@@ -55,11 +55,7 @@ export function InteractiveShell({ originPwd }: { originPwd: string }) {
     const [executing, setExecuting] = useState(false);
     const [history, setHistory] = useState<CommandHistory[]>([]);
 
-    const [fullScreenAppReq, setFullScreenAppReq] = useState<FullScreenAppRequest | undefined>();
-
-    const sendFullScreenAppReq = (req: FullScreenAppRequest | undefined) => {
-        setFullScreenAppReq(req);
-    }
+    const [fullScreenAppReq, sendFullScreenAppReq] = useState<FullScreenAppRequest | undefined>();
 
     const historyContainerRef = useRef<HTMLDivElement>(null);
 
@@ -106,6 +102,8 @@ export function InteractiveShell({ originPwd }: { originPwd: string }) {
     // catch browser history change event
     const handlePopState = (e: PopStateEvent) => {
         const path = window.location.pathname;
+        // close full screen app
+        sendFullScreenAppReq(undefined);
         submitCommand(`go ${path}`);
     }
 
@@ -127,7 +125,7 @@ export function InteractiveShell({ originPwd }: { originPwd: string }) {
         document.body.addEventListener("click", handleLinkClick);
 
         window.sendToLess = (content, filename) => {
-            setFullScreenAppReq({
+            sendFullScreenAppReq({
                 type: "less",
                 props: { content, filename }
             });
