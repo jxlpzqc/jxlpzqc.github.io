@@ -27,6 +27,16 @@ const metaDate =
 
 <ShellPage currentPath={path} command={"cat " + file.absPath}>
     <div class="command-result mb-8 mt-4" id="init-content" data-init-type="file">
+        {
+            post.data.heroImage && (
+                <img
+                    src={post.data.heroImage}
+                    alt={post.data.title}
+                    class="w-full max-h-64 object-cover rounded-lg"
+                />
+            )
+        }
+
         <h1 class="text-3xl font-bold flex-1">
             {post.data.title}
         </h1>
@@ -48,6 +58,14 @@ const metaDate =
                                 </a>
                             ))}
                         </dd>
+                    </>
+                )
+            }
+            {
+                post.data.description && (
+                    <>
+                        <dt>Description</dt>
+                        <dd class="!col-start-1 !col-span-2">{post.data.description}</dd>
                     </>
                 )
             }
