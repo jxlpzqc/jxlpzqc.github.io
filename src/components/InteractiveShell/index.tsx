@@ -101,6 +101,7 @@ export function InteractiveShell({ originPwd }: { originPwd: string }) {
 
     // catch browser history change event
     const handlePopState = (e: PopStateEvent) => {
+        if (e.state === null && !!window.location.hash) return;
         sendGoCommand();
         e.preventDefault();
     }
@@ -124,7 +125,12 @@ export function InteractiveShell({ originPwd }: { originPwd: string }) {
             }
             e.preventDefault();
             if (path) {
-                window.history.pushState({}, "", path);
+                try {
+                    window.history.pushState({}, "", path);
+                } catch (e) {
+                    // external link
+                    console.error(e);
+                }
                 sendGoCommand(path);
             }
         }
