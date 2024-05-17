@@ -2,7 +2,6 @@ import ShellPrompt from "@components/ShellPrompt";
 import { useEffect, useRef, useState, type ReactElement, type ReactNode } from "react";
 import { executeCommand } from "./executor";
 import ReadLine from "./ReadLine";
-import LessApp from "@components/LessApp";
 import type { FullScreenAppRequest } from "./FullScreenApp";
 import FullScreenApp from "./FullScreenApp";
 
@@ -71,7 +70,7 @@ export function InteractiveShell({ originPwd }: { originPwd: string }) {
 
             // scroll to target's top
             if (target) {
-                window.scrollTo({ top: target.offsetTop - 116, behavior: "smooth" });
+                window.scrollTo({ top: target.offsetTop - 96, behavior: "smooth" });
             }
         }, 0);
     }
@@ -96,7 +95,10 @@ export function InteractiveShell({ originPwd }: { originPwd: string }) {
             id: history.length,
             path: pwd,
             command: command,
-            runningStatusList: []
+            runningStatusList: [{
+                type: "fail",
+                message: "Aborted, use <C-S-c> to copy."
+            }]
         }]);
         scrollToLastHistory();
     }
@@ -123,9 +125,18 @@ export function InteractiveShell({ originPwd }: { originPwd: string }) {
     useEffect(() => {
         window.addEventListener("popstate", handlePopState);
         document.body.addEventListener("click", handleLinkClick);
+
+        window.sendToLess = (content, filename) => {
+            setFullScreenAppReq({
+                type: "less",
+                props: { content, filename }
+            });
+        };
+
         return () => {
             window.removeEventListener("popstate", handlePopState);
             document.body.removeEventListener("click", handleLinkClick);
+            window.sendToLess = undefined;
         }
     }, [submitCommand]);
 

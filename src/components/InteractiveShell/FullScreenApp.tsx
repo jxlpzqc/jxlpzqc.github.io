@@ -29,8 +29,6 @@ function FullScreenInnerAppWrapper(props: PropsWithChildren<{}>) {
 }
 
 export default function FullScreenApp({ req }: Props) {
-    if (!req) return null;
-    const { type, props: appProps } = req;
     const [visible, setVisible] = useState(false);
     const onExit = () => {
         setVisible(false);
@@ -41,10 +39,9 @@ export default function FullScreenApp({ req }: Props) {
     }, [req]);
 
     if (!visible) return null;
-
-    if (type === "less") {
+    if (req?.type === "less") {
         return <FullScreenInnerAppWrapper >
-            <LessApp {...appProps!} onExit={onExit} />
+            <LessApp {...req.props!} onExit={onExit} />
         </FullScreenInnerAppWrapper>;
     }
     return null;

@@ -1,12 +1,16 @@
-.posts-list thead::after {
+table.posts-list thead::after {
     content: "";
     display: table-row;
     height: 1rem;
 }
 
-.posts-list tbody::before {
+table.posts-list tbody::before {
     content: "";
     display: table-row;
     height: 1rem;
     @apply border-t-2 border-black border-dashed;
+}
+
+table.posts-list a {
+    @apply text-blue-700 underline;
 }

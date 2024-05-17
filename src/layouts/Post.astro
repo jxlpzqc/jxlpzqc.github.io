@@ -1,5 +1,4 @@
 ---
-import { getCollection } from "astro:content";
 import ShellPage from "./ShellPage.astro";
 import type { CollectionEntry } from "astro:content";
 import type { FileSystemItem } from "@utils/filesystem";
@@ -13,26 +12,58 @@ export type Props = {
 const { post, file, path } = Astro.props;
 
 const { Content } = await post.render();
+
+const formatDate = (date: Date) => {
+    // format as 2021-01-01
+    return date.toISOString().split("T")[0];
+};
+
+const metaDate =
+    formatDate(post.data.pubDate) +
+    (post.data.updatedDate
+        ? `, updated on ${formatDate(post.data.updatedDate)}`
+        : "");
 ---
 
 <ShellPage currentPath={path} command={"cat " + file.absPath}>
-    <div class="my-8" id="init-content" data-init-type="file">
+    <div class="command-result mb-8 mt-4" id="init-content" data-init-type="file">
+        <h1 class="text-3xl font-bold flex-1">
+            {post.data.title}
+        </h1>
+        <!-- article meta -->
+        <dl class="meta-list">
+            <dt>Date</dt>
+            <dd>{metaDate}</dd>
+            {
+                post.data.tags && post.data.tags.length > 0 && (
+                    <>
+                        <dt>Tags</dt>
+                        <dd class="space-x-2">
+                            {post.data.tags.map((tag) => (
+                                <a
+                                    href={`/tags/${tag}`}
+                                    class="text-blue-500 hover:underline"
+                                >
+                                    {tag}
+                                </a>
+                            ))}
+                        </dd>
+                    </>
+                )
+            }
+        </dl>
+
+        <div class="my-4 flex gap-4 flex-wrap text-sm">
+            <button class="btn-primary toolbar-button" data-command="less">
+                Pipe to less (C-h)
+            </button>
+            <button class="btn-primary toolbar-button" data-command="copylink" data-link={file.absPath}>
+                Copy link
+            </button>
+        </div>
+
         <article role="article" class="prose dark:prose-invert prose-lg">
             <Content />
         </article>
     </div>
 </ShellPage>
-
-<style>
-    .posts-list thead::after {
-        content: "";
-        display: table-row;
-        height: 1rem;
-    }
-    .posts-list tbody::before {
-        content: "";
-        display: table-row;
-        height: 1rem;
-        @apply border-t-2 border-black border-dashed;
-    }
-</style>

@@ -26,17 +26,14 @@ function SuggestionList({ word, pwd, onSelected, onClose }: SuggestionListProps)
 
     const [selected, _setSelected] = useState(-1);
     const [suggestions, setSuggestions] = useState<string[]>([]);
-    const [loading, setLoading] = useState(false);
+    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
         let diposed = false;
-
-        setLoading(true);
         getSuggestionList(word, pwd)
             .then((suggestions) => {
                 if (diposed) return;
                 setSuggestions(suggestions);
-                if (suggestions.length === 0) onClose?.();
             })
             .catch((e) => {
                 console.error(e);
@@ -46,6 +43,9 @@ function SuggestionList({ word, pwd, onSelected, onClose }: SuggestionListProps)
             .finally(() => {
                 if (diposed) return;
                 setLoading(false);
+                setTimeout(() => {
+                    window.scrollTo({ top: document.body.scrollHeight });
+                }, 0);
             });
 
         return () => {
@@ -147,6 +147,8 @@ function SuggestionList({ word, pwd, onSelected, onClose }: SuggestionListProps)
     }
 
     useEffect(() => {
+
+        if (!loading && suggestions.length === 0) onClose?.();
         if (suggestions.length === 1) {
             onSelected?.(suggestions[0]);
             onClose?.();
@@ -286,6 +288,7 @@ export default function ReadLine({ executing, pwd, onSubmitCommand, onAbortComma
     const handleKeyDown = async (e: KeyboardEvent) => {
         const ctrl = e.ctrlKey; // in mac, also use ctrl, not command
         const shift = e.shiftKey;
+        const alt = e.altKey;
         let keyHandled = true;
 
         // also use emacs key bindings
@@ -312,18 +315,24 @@ export default function ReadLine({ executing, pwd, onSubmitCommand, onAbortComma
         else if (!ctrl && e.key.length == 1) insert(e.key);
         else if (e.key === "Enter") submit();
         else if (ctrl && e.key === "c") abort();
+        // ctrl + shift + c, copy selected text
+        else if (ctrl && e.key === "C") {
+            const selectedText = window.getSelection()?.toString();
+            if (selectedText) {
+                navigator.clipboard.writeText(selectedText);
+            }
+        }
         else if (ctrl && e.key === "l") { setCommand(""); setCursorPosition(0); onSubmitCommand("clear"); }
-        else if (!shift && e.key === "Tab") openOrNextSuggestion();
-        else if (shift && e.key === "Tab") openAndpreviousSuggestion();
+        else if (!alt && !shift && e.key === "Tab") openOrNextSuggestion();
+        else if (!alt && shift && e.key === "Tab") openAndpreviousSuggestion();
         else keyHandled = false;
 
         if (keyHandled) {
             e.preventDefault();
+            setTimeout(() => {
+                window.scrollTo({ top: document.body.scrollHeight });
+            }, 0);
         }
-
-        setTimeout(() => {
-            window.scrollTo({ top: document.body.scrollHeight, behavior: "smooth" });
-        }, 0);
     }
 
     const handleKeyDownWrapper = (e: KeyboardEvent) => {

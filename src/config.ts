@@ -3,7 +3,7 @@ export type Site = {
     author: string;
     desc: string;
     title: string;
-    postPerPage: number;
+    listLimitSize: number;
     ogImage: string;
 
 };
@@ -13,6 +13,6 @@ export const SITE: Site = {
     author: "Chengzi's blog",
     desc: "",
     title: "My Blog",
-    postPerPage: 20,
+    listLimitSize: 20,
     ogImage: "astropaper-og.jpg",
 };

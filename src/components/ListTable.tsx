@@ -1,5 +1,6 @@
 import type { FileSystemItem } from "@utils/filesystem";
 import "./ListTable.css"
+import { SITE } from "@config"
 
 export type Props = {
     file: FileSystemItem;
@@ -32,28 +33,25 @@ export default function (props: Props) {
         return <div>This directory is empty.</div>;
     }
 
-    return (<table className="table-auto w-full *:text-left posts-list">
-        <thead>
-            <tr>
-                <th>File Name</th>
-                <th>Title / Desc</th>
-                <th>Tags</th>
-            </tr>
-        </thead>
-        <tbody>
-            {
-                children.map((item) => (<ItemView item={item} key={item.absPath} />))
-            }
-        </tbody>
-    </table>);
-
-    //  <div className="border-t-2 border-black border-dashed mt-4 pt-4" >
-    //             <div>There are total {collection.length} files, showing 1-10.</div>
-    //             <div>Use `prev` or `next` command to navigate.</div>
-    //             <div className="flex justify-between mt-4">
-    //                 <a>⬅️ Go Prev</a>
-    //                 <a>Go Next ➡️</a>
-    //             </div>
-    //         </div > 
-
+    return (
+        <div className="command-result">
+            {children.length > SITE.listLimitSize && <div className="my-4">
+                The directory contains too many files, you may
+                <a href="" className="text-blue-700" data-command="less"> pipe to less (C-h)</a>.
+            </div>}
+            <table className="table-auto w-full *:text-left posts-list">
+                <thead>
+                    <tr>
+                        <th>File Name</th>
+                        <th>Title / Desc</th>
+                        <th>Tags</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {
+                        children.map((item) => (<ItemView item={item} key={item.absPath} />))
+                    }
+                </tbody>
+            </table>
+        </div>);
 }

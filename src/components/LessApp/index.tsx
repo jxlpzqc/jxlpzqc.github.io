@@ -15,6 +15,7 @@ export default function LessApp(props: Props) {
     const appRef = useRef<HTMLDivElement>(null);
 
     const [scrollPercentage, setScrollPercentage] = useState<string>("");
+    const [message, setMessage] = useState<string>("");
 
     useEffect(() => {
         if (contentRef.current) {
@@ -62,15 +63,24 @@ export default function LessApp(props: Props) {
         else if (e.key === "k" || e.key === "y" || e.key === "ArrowUp") scrollUp(); // scroll up
         else if (e.key === "g" || e.key === "Home") scrollToTop(); // go to top
         else if (e.key === "G" || e.key === "End") scrollToBottom(); // go to bottom
-        else if (e.key === "f" || e.key === "PageDown") scrollPageDown(); // page down
+        else if ((!e.ctrlKey && e.key === "f") || e.key === "PageDown") scrollPageDown(); // page down
         else if (e.key === "b" || e.key === "PageUp") scrollPageUp(); // page up
         else if (e.key === "d") scrollPageDown(true); // half page down
         else if (e.key === "u") scrollPageUp(true); // half page up
+        else if (e.key === "/") {
+            setMessage("Search is not supported, use <C-f> instead.");
+        }
         else keyHandled = false;
 
         if (keyHandled) {
             e.preventDefault();
+        } else {
+            if (e.key === "f" && e.ctrlKey) {
+                setMessage("<C-f> is mapped as browser's search, use f instead.");
+            }
         }
+
+
     };
 
     const handleScroll = (e: React.UIEvent) => {
@@ -81,42 +91,54 @@ export default function LessApp(props: Props) {
         const scrollTop = element.scrollTop;
         const scrollHeight = element.scrollHeight - element.clientHeight;
         const percentage = Math.round(scrollTop / scrollHeight * 100);
+        setMessage("");
         if (isNaN(percentage)) setScrollPercentage("");
         else if (percentage == 0) setScrollPercentage("");
         else setScrollPercentage(`${percentage}%`);
+    }
+
+
+    let bottomLeftElement = null;
+
+    if (message || !scrollPercentage) {
+        bottomLeftElement = <span className="bg-black text-white px-2">{message || props.filename}</span>;
+    } else if (scrollPercentage === "100%") {
+        <span className="bg-black text-white px-2">(END)</span>
+    } else if (scrollPercentage !== "" && scrollPercentage !== "100%") {
+        bottomLeftElement = <>
+            <span className="px-1 font-extrabold">:</span>
+            <span
+                className="animate-cursor-blink bg-black align-bottom inline-block w-3"
+                style={{ height: '24px' }}></span>
+        </>;
     }
 
     return (<div ref={appRef} className="w-full h-full overflow-auto bg-yellow-50 focus:outline-none"
         tabIndex={-1} onKeyDown={handleKeyDown}
         onScroll={handleScroll}
     >
-        <div className="p-8  max-w-screen-md m-auto" ref={contentRef}></div>
+        <div className="p-8 max-w-screen-md m-auto less-app-content" ref={contentRef}></div>
+        {/* close button */}
+        <div className="fixed top-0 left-0">
+            <button className="hover:bg-yellow-500 opacity-30 hover:opacity-100 transition-all p-4" onClick={props.onExit}>
+                {/* X SVG */}
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                    stroke="black" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"
+                >
+                    <line x1="18" y1="6" x2="6" y2="18" className="close"></line>
+                    <line x1="6" y1="6" x2="18" y2="18" className="close"></line>
+                </svg>
+            </button>
+        </div>
+
         {/* status bar */}
         <div className="fixed bg-yellow-50 bottom-0 flex text-lg justify-between" style={{
             width: 'calc(100% - 20px)',
         }}>
-            <div>
-                {
-                    !scrollPercentage && <span className="bg-black text-white px-2">{props.filename}</span>
-                }
-                {
-                    scrollPercentage === "100%" && <span className="bg-black text-white px-2">(END)</span>
-                }
-                {
-                    scrollPercentage !== "" && scrollPercentage !== "100%" && <>
-                        <span className="px-1 font-extrabold">:</span>
-                        <span
-                            className="animate-cursor-blink bg-black align-bottom inline-block w-3"
-                            style={{ height: '24px' }}></span>
-                    </>
-                }
-
-
-            </div>
+            <div>{bottomLeftElement}</div>
             <div className="mr-8">
                 <span>{scrollPercentage}</span>
             </div>
-
         </div>
     </div>);
 }

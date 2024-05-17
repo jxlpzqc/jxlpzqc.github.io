@@ -20,6 +20,6 @@ const { currentPath: current, command }: Props = Astro.props;
             <ShellPrompt currentPath={current} command={command} />
             <slot />
         </div>
-        <InteractiveShell originPwd={current} client:load />
+        <InteractiveShell originPwd={current} client:only="react" />
     </div>
 </Base>

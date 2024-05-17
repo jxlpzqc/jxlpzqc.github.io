@@ -2,20 +2,37 @@
 @tailwind components;
 @tailwind utilities;
 
-@keyframes blink {
-    0% {
-        opacity: 1;
-    }
-
-    50% {
-        opacity: 0;
-    }
-
-    100% {
-        opacity: 1;
-    }
+button.btn-primary {
+    @apply px-4 py-1 bg-yellow-700 text-white transition-colors;
 }
 
-.animate-cursor-blink {
-    animation: blink 1s step-end infinite;
+button.btn-primary:hover {
+    @apply bg-yellow-800 ;
+}
+
+button.btn-primary:active {
+    @apply bg-yellow-900 ;
+}
+
+.less-app-content .toolbar-button {
+    display: none;
+}
+
+/* post styles */
+.meta-list {
+    @apply text-sm text-gray-500 my-2 grid;
+    grid-template-columns: auto 1fr;
+}
+
+.meta-list dt {
+    @apply font-bold mr-2;
+    grid-column-start: 1;
+}
+
+.meta-list dt::after {
+    content: ":";
+}
+
+.meta-list dd {
+    grid-column-start: 2;
 }

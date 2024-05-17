@@ -13,18 +13,21 @@ export type Props = {
 };
 
 export const getStaticPaths = (async () => {
+    const IGNORE_LIST = ["/"];
     const items = await getAllFsItems();
 
-    return items.map((item) => ({
-        params: {
-            slug: item.absPath!!,
-        },
-        props: {
-            type: item.type,
-            blog: item.collectionObject,
-            file: item,
-        },
-    }));
+    return items
+        .filter((x) => x.absPath && !IGNORE_LIST.includes(x.absPath))
+        .map((item) => ({
+            params: {
+                slug: item.absPath!!,
+            },
+            props: {
+                type: item.type,
+                blog: item.collectionObject,
+                file: item,
+            },
+        }));
 }) satisfies GetStaticPaths;
 
 const { type, blog, file } = Astro.props;

@@ -113,8 +113,8 @@ export function* executeCommand(command: string, pwd: string, history: CommandHi
     yield result;
 
     for (const action of actions) {
-        if (action.type === "list" || action.type === 'viewPost'
-            || action.type === 'changeDir' || action.type === 'go') {
+        if (action.type === "list" || action.type === 'view'
+            || action.type === 'cd' || action.type === 'go') {
             newCommandHistory.runningStatusList?.push({ type: "running", message: "Fetching content... " });
             yield result;
         }
@@ -124,7 +124,7 @@ export function* executeCommand(command: string, pwd: string, history: CommandHi
             document.getElementById("init-history")?.remove();
             newHistory.length = 0;
             yield { histories: newHistory, pwd: newPwd };
-        } else if (action.type === "changeDir") {
+        } else if (action.type === "cd") {
             let inputDir = action.path!;
             if (!inputDir) {
                 newCommandHistory.runningStatusList = [{ type: "fail", message: "cd: no argument." }];
@@ -132,7 +132,7 @@ export function* executeCommand(command: string, pwd: string, history: CommandHi
             }
             inputDir = getAbsoluteDir(inputDir, pwd);
             yield getRemoteCommandResult(inputDir, 'cd');
-        } else if (action.type === "viewPost") {
+        } else if (action.type === "view") {
             let path = action.path!;
             path = getAbsoluteDir(path, pwd);
             yield getRemoteCommandResult(path, action.viewer === 'less' ? 'less' : 'cat');
@@ -145,16 +145,17 @@ export function* executeCommand(command: string, pwd: string, history: CommandHi
             path = getAbsoluteDir(path, pwd);
             yield getRemoteCommandResult(path, 'go');
         } else if (action.type === "empty") {
-        } else if (action.type === "unknown") {
-            newCommandHistory.runningStatusList = [{
-                type: "fail",
-                message: "sh: unknown command. "
-            }];
         } else if (action.type === "error") {
             newCommandHistory.runningStatusList = [{
                 type: "fail",
                 message: action.message!
             }];
+        } else if (action.type === "print") {
+            const ele = document.createElement("pre");
+            if (action.message) {
+                ele.textContent = action.message;
+                newCommandHistory.resultElement = ele;
+            }
         } else {
             newCommandHistory.runningStatusList = [{
                 type: "fail",

@@ -25,6 +25,9 @@
       ],
       "@utils/*": [
         "utils/*"
+      ],
+      "@scripts/*": [
+        "scripts/*"
       ]
     },
     "jsxImportSource": "react"
