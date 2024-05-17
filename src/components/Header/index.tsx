@@ -1,12 +1,8 @@
 import { useState } from "react";
 import styles from "./index.module.css"
+import { SITE } from "@config";
 
-const logo = `  ___ _                     _
- / __| |_  ___ _ _  __ _ __(_)
-| (__| ' \\/ -_) ' \\/ _\` |_ / |
- \\___|_||_\\___|_||_\\__, /__|_|
-                   |___/
-`;
+const logo = SITE.logo;
 
 const MenuButton = ({ open, onClick }: {
     open: boolean;
