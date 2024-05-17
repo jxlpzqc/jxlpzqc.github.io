@@ -22,14 +22,13 @@ function ItemView({ item }: { item: FileSystemItem }) {
         </td>
 
         <td>
-            <div className="text-gray-500">{item.tag?.join(",")}</div>
+            <div className="text-gray-500">{item.tag?.join(", ")}</div>
         </td>
     </tr>
 }
 
 export default function (props: Props) {
 
-    const path = props.file.absPath || "/";
     const children = props.file.children;
     if (!children || children.length === 0) {
         return <div>This directory is empty.</div>;
@@ -37,7 +36,7 @@ export default function (props: Props) {
 
     return (
         <div className="command-result">
-            {children.length > SITE.listLimitSize && <div className="my-4">
+            {children.length > SITE.listLimitSize && <div className="my-4 hidden-in-less">
                 The directory contains too many files, you may
                 <a href="" className="text-term-blue" data-command="less"> pipe to less (C-h)</a>.
             </div>}
@@ -46,7 +45,7 @@ export default function (props: Props) {
                     <tr>
                         <th>Name</th>
                         <th>Title</th>
-                        <th>Tags</th>
+                        <th className="w-1/4" >Tags</th>
                     </tr>
                 </thead>
                 <tbody>

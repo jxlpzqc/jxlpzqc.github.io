@@ -34,7 +34,7 @@ button.btn-primary:active {
     @apply bg-yellow-900;
 }
 
-.less-app-content .toolbar-button {
+.less-app-content .hidden-in-less {
     display: none;
 }
 

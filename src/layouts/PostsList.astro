@@ -28,13 +28,13 @@ const currentFile = isListCurrent ? file : await getFsItem(path);
             </div>
         ) : (
             <>
-                <div class="my-8">
-                    <ListTable file={file} />
-                </div>
                 <div class="hidden">
                     <div class="my-8" id="init-content" data-init-type="list">
                         <ListTable file={currentFile} />
                     </div>
+                </div>
+                <div class="my-8">
+                    <ListTable file={file} />
                 </div>
             </>
         )
