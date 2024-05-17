@@ -46,7 +46,7 @@ export const Header = () => {
 
     return (
         <header className="sticky top-0 bg-term-bg z-20 shadow-md  dark:shadow-none dark:border-b-2 dark:border-gray-500">
-            <div className={`flex flex-wrap justify-between items-center
+            <div className={`flex flex-wrap justify-between content-center items-center
              max-w-screen-md px-8 mx-auto sm:!h-[80px] ${open ? "h-fit" : "h-[80px]"}`}>
                 <a href="/" className="text-xs font-bold leading-3">
                     {
