@@ -1,4 +1,5 @@
 import { useState } from "react";
+import styles from "./index.module.css"
 
 const logo = `  ___ _                     _
  / __| |_  ___ _ _  __ _ __(_)
@@ -61,8 +62,8 @@ export const Header = () => {
                     <MenuButton open={open} onClick={() => setOpen(!open)} />
                 </div>
                 <div className="w-full sm:w-0"></div>
-                <nav className="self-end text-lg font-bold pb-4 ">
-                    <ul className={`mt-4 sm:mt-0 sm:flex sm:gap-8 ${open ? "block" : "hidden"}`}>
+                <nav className={styles["main-nav"]}>
+                    <ul className={`${open ? "block" : "hidden"}`}>
                         <li><a href="/recents">/recents</a></li>
                         <li><a href="/tags">/tags</a></li>
                         <li><a href="/archives">/archives</a></li>

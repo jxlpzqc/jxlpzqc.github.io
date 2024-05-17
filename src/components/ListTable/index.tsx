@@ -1,5 +1,5 @@
 import type { FileSystemItem } from "@utils/filesystem";
-import classes from "./ListTable.module.css"
+import classes from "./index.module.css"
 import { SITE } from "@config"
 
 export type Props = {

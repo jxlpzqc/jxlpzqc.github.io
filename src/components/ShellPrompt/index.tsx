@@ -1,4 +1,4 @@
-import classes from "./ShellPrompt.module.css";
+import classes from "./index.module.css";
 
 type Props = {
     currentPath: string;
