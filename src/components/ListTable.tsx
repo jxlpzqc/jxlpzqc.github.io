@@ -44,8 +44,8 @@ export default function (props: Props) {
             <table className={`table-auto w-full *:text-left ${classes['posts-list']}`}>
                 <thead>
                     <tr>
-                        <th>File Name</th>
-                        <th>Title / Desc</th>
+                        <th>Name</th>
+                        <th>Title</th>
                         <th>Tags</th>
                     </tr>
                 </thead>
