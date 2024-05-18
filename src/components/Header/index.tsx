@@ -30,7 +30,7 @@ const MenuButton = ({ open, onClick }: {
                 <line x1="3" y1="6" x2="21" y2="6" className="line"></line>
                 <line x1="12" y1="18" x2="21" y2="18" className="line"></line>
             </g>
-            <g opacity={open? 100 : 0} className="transition-opacity">
+            <g opacity={open ? 100 : 0} className="transition-opacity">
                 <line x1="18" y1="6" x2="6" y2="18" className="close"></line>
                 <line x1="6" y1="6" x2="18" y2="18" className="close"></line>
             </g>
@@ -43,17 +43,30 @@ const MenuButton = ({ open, onClick }: {
 export const Header = () => {
     const [open, setOpen] = useState(false);
 
+    let logoEle = null;
+    if (SITE.logoImg) {
+        if (typeof (SITE.logoImg) === "string") {
+            logoEle = (<img className="h-[60px]" src={SITE.logoImg} alt="logo" />);
+        } else {
+            logoEle = (<>
+                <img className="h-[60px] dark:hidden" src={SITE.logoImg.light} alt="logo" />
+                <img className="h-[60px] hidden dark:inline" src={SITE.logoImg.dark} alt="logo" />
+
+            </>)
+        }
+    } else {
+        logoEle = <pre>{SITE.logoText}</pre>;
+    }
+
+
     return (
-        <header className="sticky top-0 bg-term-bg z-20 shadow-md dark:shadow-none dark:border-b-2 dark:border-gray-500">
+        <header className="sticky top-0 bg-term-bg z-20 shadow-md
+            dark:bg-[#343434] dark:shadow-black">
             <div className={`sm:flex justify-between items-center
              max-w-screen-md px-8 mx-auto`}>
                 <div className="w-full sm:w-fit flex justify-between items-center h-[80px]">
                     <a href="/" className="text-xs font-bold leading-3">
-                        {
-                            SITE.logoImg ?
-                                <img className="h-[60px]" src="/logo.svg" alt="logo" /> :
-                                <pre>{SITE.logoText}</pre>
-                        }
+                        {logoEle}
                     </a>
 
                     <div className="self-center sm:hidden">

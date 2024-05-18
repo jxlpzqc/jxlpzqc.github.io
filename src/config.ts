@@ -11,7 +11,10 @@ export type Site = {
     /**
      * when logo image is provided, the logoText will be ignored
      */
-    logoImg?: string;
+    logoImg?: string | {
+        dark: string,
+        light: string
+    };
 };
 
 // use figlet to generate a logo
@@ -33,5 +36,8 @@ export const SITE: Site = {
     shHostname: "blog",
     shUsername: "chengzi",
     logoText: logoText,
-    logoImg: "/logo.svg", 
+    logoImg: {
+        light: "/logo.svg",
+        dark: "/logo-dark.svg"
+    }
 };
