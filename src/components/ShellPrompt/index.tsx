@@ -24,11 +24,16 @@ const ShellPrompt = forwardRef<ShellPromptImperativeHandle, Props>(
 
         useImperativeHandle(ref, () => ({
             focus: () => {
-                textAreaRef.current?.focus({preventScroll: true});
+                textAreaRef.current?.focus({ preventScroll: true });
             }
         }));
 
-        return <div className="*:break-words *:whitespace-pre-wrap *:break-all">
+        const handleClick = () => {
+            if (!hasCursor) return;
+            textAreaRef.current?.focus({ preventScroll: true });
+        };
+
+        return <div className="*:break-words *:whitespace-pre-wrap *:break-all" onClick={handleClick}>
             <span className="text-term-green">{SITE.shUsername}@{SITE.shHostname}</span><span>:</span><span
                 className="text-term-blue">{currentPath}$ </span>
             <span>{strBeforeCursor}</span>

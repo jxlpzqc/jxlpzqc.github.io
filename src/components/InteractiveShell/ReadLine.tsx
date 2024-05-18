@@ -342,7 +342,9 @@ export default function ReadLine({ executing, pwd, onSubmitCommand, onAbortComma
     }
 
     const focusPrompt = () => {
-        promptRef.current?.focus();
+        // if not in touch device, focus the prompt
+        if (!("ontouchstart" in window))
+            promptRef.current?.focus();
     }
 
     useEffect(() => {
