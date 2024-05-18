@@ -75,6 +75,7 @@ export const Header = () => {
                 </div>
                 <nav className={`${styles["main-nav"]} `}>
                     <ul className={`${open ? "h-fit" : "h-0 !py-0"}`}>
+                        <li className="sm:hidden"><a href="/">/</a></li>
                         <li><a href="/recents">/recents</a></li>
                         <li><a href="/tags">/tags</a></li>
                         <li><a href="/archives">/archives</a></li>

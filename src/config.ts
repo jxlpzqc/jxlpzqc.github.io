@@ -7,6 +7,10 @@ export type Site = {
     ogImage: string;
     shHostname: string;
     shUsername: string;
+    /**
+     * file extension name, such as '.md', '.html'
+     */
+    postExt: string;
     logoText?: string;
     /**
      * when logo image is provided, the logoText will be ignored
@@ -35,6 +39,7 @@ export const SITE: Site = {
     ogImage: "astropaper-og.jpg",
     shHostname: "blog",
     shUsername: "chengzi",
+    postExt: ".html",
     logoText: logoText,
     logoImg: {
         light: "/logo.svg",

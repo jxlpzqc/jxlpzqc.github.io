@@ -1,5 +1,8 @@
 import { getCollection, type CollectionEntry } from "astro:content";
 import type { FileSystemItem } from "./filesystem";
+import { SITE } from "@config";
+
+const postExt = SITE.postExt;
 
 function getPosts(blogs: CollectionEntry<'blog'>[]): FileSystemItem[] {
 
@@ -13,7 +16,7 @@ function getPosts(blogs: CollectionEntry<'blog'>[]): FileSystemItem[] {
             const slug = slugs[i];
             if (i === slugs.length - 1) {
                 current.push({
-                    name: slug + ".md",
+                    name: slug + postExt,
                     type: "file",
                     tag: blog.data.tags || [],
                     collectionObject: blog,
@@ -60,9 +63,9 @@ function getRecents(blogs: CollectionEntry<'blog'>[]): FileSystemItem[] {
 
         names.add(noDupFilenameWithoutExt);
         ret.push({
-            name: noDupFilenameWithoutExt + ".md",
+            name: noDupFilenameWithoutExt + postExt,
             type: "symlink",
-            symlink: "/posts/" + blog.slug + ".md",
+            symlink: "/posts/" + blog.slug + postExt,
             tag: blog.data.tags || [],
             collectionObject: blog,
         });
@@ -95,9 +98,9 @@ function getTags(blogs: CollectionEntry<'blog'>[]): FileSystemItem[] {
             }
 
             current.children!.push({
-                name: noDupFilenameWithoutExt + ".md",
+                name: noDupFilenameWithoutExt + postExt,
                 type: "symlink",
-                symlink: "/posts/" + blog.slug + ".md",
+                symlink: "/posts/" + blog.slug + postExt,
                 tag: blog.data.tags || [],
                 collectionObject: blog,
             });
@@ -133,9 +136,9 @@ function getArchives(blogs: CollectionEntry<'blog'>[]): FileSystemItem[] {
         }
 
         current.children!.push({
-            name: noDupFilenameWithoutExt + ".md",
+            name: noDupFilenameWithoutExt + postExt,
             type: "symlink",
-            symlink: "/posts/" + blog.slug + ".md",
+            symlink: "/posts/" + blog.slug + postExt,
             tag: blog.data.tags || [],
             collectionObject: blog,
         });
@@ -186,6 +189,8 @@ export async function getRootFs(): Promise<FileSystemItem> {
             children: getArchives(await getCollection('blog')),
         },
         {
+            // if you want to change ext, change about.md.md file name,
+            // and change ignore list in[...slug].astro
             name: "about.md",
             type: "file",
             desc: "About me",

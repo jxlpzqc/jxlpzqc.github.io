@@ -1,4 +1,5 @@
 ---
+import { SITE } from "@config";
 import ShellPage from "./ShellPage.astro";
 
 export type Props = {
@@ -11,7 +12,7 @@ export type Props = {
 const { title, url } = Astro.props.frontmatter;
 ---
 
-<ShellPage currentPath="/" command={"cat about.md"}>
+<ShellPage currentPath="/" command={"cat about" + SITE.postExt}>
     <div
         class="command-result mb-8 mt-4"
         id="init-content"
