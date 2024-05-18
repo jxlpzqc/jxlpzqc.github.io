@@ -34,7 +34,8 @@ button.btn-primary:active {
     @apply bg-yellow-900 dark:bg-gray-500;
 }
 
-.less-app-content .hidden-in-less {
+.less-app-content .hidden-in-less,
+.less-app-content .icon-link {
     display: none;
 }
 
