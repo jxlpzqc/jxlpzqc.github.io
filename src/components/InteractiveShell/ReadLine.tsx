@@ -1,4 +1,4 @@
-import ShellPrompt from "@components/ShellPrompt";
+import ShellPrompt, { type ShellPromptImperativeHandle } from "@components/ShellPrompt";
 import { useEffect, useRef, useState } from "react";
 import { appendHistories, getHistories } from "./historyStorage";
 import { getSuggestionList } from "./fetchContent";
@@ -187,6 +187,7 @@ export default function ReadLine({ executing, pwd, onSubmitCommand, onAbortComma
     const [cursorPosition, setCursorPosition] = useState(0);
 
     const hisPos = useRef<number>(-1);
+    const promptRef = useRef<ShellPromptImperativeHandle>(null);
 
     const currentWord = command.slice(0, cursorPosition).split(/\s+/).pop() || "";
     const isCursorWordEnd = cursorPosition === command.length || command[cursorPosition] === " ";
@@ -285,7 +286,11 @@ export default function ReadLine({ executing, pwd, onSubmitCommand, onAbortComma
 
     //#endregion
 
-    const handleKeyDown = async (e: KeyboardEvent) => {
+    const handleInput = (input: string) => {
+        insert(input);
+    }
+
+    const handleKeyDown = async (e: React.KeyboardEvent) => {
         const ctrl = e.ctrlKey; // in mac, also use ctrl, not command
         const shift = e.shiftKey;
         const alt = e.altKey;
@@ -311,7 +316,7 @@ export default function ReadLine({ executing, pwd, onSubmitCommand, onAbortComma
         else if (ctrl && e.key === "u") { setCommand(command.slice(cursorPosition)); setCursorPosition(0); } // delete from cursor to the beginning of the line
         // ctrl + c, ctrl + d
         // if not ctrl, insert the character
-        else if (!ctrl && e.key.length == 1) insert(e.key);
+        // else if (!ctrl && e.key.length == 1) insert(e.key);
         else if (e.key === "Enter") submit();
         else if (ctrl && e.key === "c") abort();
         // ctrl + shift + c, copy selected text
@@ -336,39 +341,34 @@ export default function ReadLine({ executing, pwd, onSubmitCommand, onAbortComma
         }
     }
 
-    const handleKeyDownWrapper = (e: KeyboardEvent) => {
-        // if no element is focused, then we can handle the key event
-        if (document.activeElement === document.body) {
-            handleKeyDown(e);
-        }
-    };
-
-    const handlePasteWrapper = (e: ClipboardEvent) => {
-        // if no element is focused, then we can handle the paste event
-        if (document.activeElement === document.body) {
-            e.preventDefault();
-            const text = e.clipboardData?.getData("text");
-            insert(text || "");
-        }
+    const focusPrompt = () => {
+        promptRef.current?.focus();
     }
 
     useEffect(() => {
-        window.addEventListener("keydown", handleKeyDownWrapper);
-        document.body.addEventListener("paste", handlePasteWrapper);
+        // focus not bubble, so add event listener to body
+        document.body.addEventListener("focus", focusPrompt);
         return () => {
-            window.removeEventListener("keydown", handleKeyDownWrapper);
-            document.body.removeEventListener("paste", handlePasteWrapper);
+            document.body.removeEventListener("focus", focusPrompt);
         }
-    });
+    }, []);
+
+    useEffect(() => {
+        if (!executing) {
+            promptRef.current?.focus();
+        }
+    }, [executing]);
 
     return !executing &&
         <>
-            <ShellPrompt currentPath={pwd} command={command}
+            <ShellPrompt ref={promptRef} currentPath={pwd} command={command}
+                onInput={handleInput}
+                onKeyDown={handleKeyDown}
                 hasCursor={true} cursorPosition={cursorPosition} />
             {showSuggestion && <SuggestionList word={currentWord}
                 pwd={pwd}
                 onSelected={(v) => { replaceCurrentWord(v); }}
-                onClose={() => { setShowSuggestion(false); }} />
+            onClose={() => { setShowSuggestion(false); focusPrompt(); }} />
             }
         </>
 

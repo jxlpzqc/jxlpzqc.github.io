@@ -17,3 +17,8 @@
     height: 24px;
     @apply bg-term-normal align-top inline-block w-3 absolute;
 }
+
+.cursor-inactive {
+    animation: none;
+    @apply bg-transparent border-term-normal border-2 border-solid;
+}

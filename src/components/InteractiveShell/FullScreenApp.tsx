@@ -17,8 +17,9 @@ function FullScreenInnerAppWrapper(props: PropsWithChildren<{}>) {
         document.body.style.overflow = "hidden";
         return () => {
             document.body.style.overflow = "auto";
+            document.body.focus();
         };
-    });
+    }, []);
 
     // create portal
     return ReactDOM.createPortal(
