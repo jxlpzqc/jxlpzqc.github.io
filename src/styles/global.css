@@ -23,15 +23,15 @@
 /* button style */
 
 button.btn-primary {
-    @apply px-4 py-1 bg-yellow-700 text-white transition-colors;
+    @apply px-4 py-1 bg-yellow-700 dark:bg-gray-700 text-white transition-colors;
 }
 
 button.btn-primary:hover {
-    @apply bg-yellow-800;
+    @apply bg-yellow-800 dark:bg-gray-600;
 }
 
 button.btn-primary:active {
-    @apply bg-yellow-900;
+    @apply bg-yellow-900 dark:bg-gray-500;
 }
 
 .less-app-content .hidden-in-less {
