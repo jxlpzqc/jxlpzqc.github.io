@@ -57,6 +57,21 @@ button.btn-primary:active {
     grid-column-start: 2;
 }
 
+/* when icon link in a, disable underline */
+.prose a:has(> span.icon-link) {
+    @apply no-underline;
+}
+
+.prose span.icon-link::after {
+    content: " 🔗";
+    font-size: 1rem;
+    text-decoration: none;
+}
+
+html {
+    scroll-padding-top: 96px;
+}
+
 /* post list styles */
 .posts-list thead::after {
     content: "";
