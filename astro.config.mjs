@@ -23,5 +23,11 @@ export default defineConfig({
       rehypeSlug,
       [rehypeAutoLinkHeadings, { behavior: 'append' }]
     ],
+    shikiConfig: {
+      themes: {
+        light: 'github-light',
+        dark: 'github-dark'
+      },
+    }
   }
 });

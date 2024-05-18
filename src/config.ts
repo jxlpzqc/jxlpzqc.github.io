@@ -39,7 +39,7 @@ export const SITE: Site = {
     ogImage: "astropaper-og.jpg",
     shHostname: "blog",
     shUsername: "chengzi",
-    postExt: ".html",
+    postExt: ".md",
     logoText: logoText,
     logoImg: {
         light: "/logo.svg",

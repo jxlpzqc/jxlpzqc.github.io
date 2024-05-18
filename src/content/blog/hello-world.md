@@ -35,3 +35,24 @@ This is a test article.
 
 
 :joy: Github emoji
+
+
+This is a test code block:
+
+```rust
+pub struct Test {
+    name: String,
+}
+
+impl Test {
+    pub fn new(name: String) -> Self {
+        Self {
+            name,
+        }
+    }
+}
+
+fn main() {
+    println!("Hello, world!");
+}
+```
