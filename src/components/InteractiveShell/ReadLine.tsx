@@ -356,9 +356,7 @@ export default function ReadLine({ executing, pwd, onSubmitCommand, onAbortComma
     }, []);
 
     useEffect(() => {
-        if (!executing) {
-            promptRef.current?.focus();
-        }
+        if (!executing) focusPrompt();
     }, [executing]);
 
     return !executing &&
