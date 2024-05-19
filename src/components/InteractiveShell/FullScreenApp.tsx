@@ -17,7 +17,7 @@ function FullScreenInnerAppWrapper(props: PropsWithChildren<{}>) {
         document.body.style.overflow = "hidden";
         return () => {
             document.body.style.overflow = "auto";
-            document.body.focus();
+            document.body.dispatchEvent(new KeyboardEvent("keydown", { key: "Enter" }));
         };
     }, []);
 
