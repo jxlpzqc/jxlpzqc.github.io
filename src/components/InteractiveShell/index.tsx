@@ -91,10 +91,7 @@ export function InteractiveShell({ originPwd }: { originPwd: string }) {
             id: history.length,
             path: pwd,
             command: command,
-            runningStatusList: [{
-                type: "fail",
-                message: "Aborted, use <C-S-c> to copy."
-            }]
+            runningStatusList: []
         }]);
         scrollToLastHistory();
     }
