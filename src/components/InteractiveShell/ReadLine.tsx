@@ -1,5 +1,5 @@
 import ShellPrompt, { type ShellPromptImperativeHandle } from "@components/ShellPrompt";
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { appendHistories, getHistories } from "./historyStorage";
 import { getSuggestionList } from "./fetchContent";
 
@@ -327,15 +327,6 @@ export default function ReadLine({ executing, pwd, onSubmitCommand, onAbortComma
         // else if (!ctrl && e.key.length == 1) insert(e.key);
         else if (e.key === "Enter") submit();
         else if (ctrl && e.key === "c") abort();
-        // ctrl + shift + c, copy selected text
-        else if (ctrl && e.key === "C") {
-            const selectedText = window.getSelection()?.toString();
-            if (selectedText) {
-                navigator.clipboard.writeText(selectedText);
-            }
-            e.preventDefault();
-            keyHandled = false;
-        }
         else if (ctrl && e.key === "l") { setCommand(""); setCursorPosition(0); onSubmitCommand("clear"); }
         else if (!alt && !shift && e.key === "Tab") openOrNextSuggestion();
         else if (!alt && shift && e.key === "Tab") openAndpreviousSuggestion();
@@ -348,16 +339,31 @@ export default function ReadLine({ executing, pwd, onSubmitCommand, onAbortComma
     }
 
     const focusPrompt = () => {
-        // if not in touch device, focus the prompt
-        if (!("ontouchstart" in window))
-            promptRef.current?.focus();
+        promptRef.current?.focus();
     }
+
+    const handleDocumentKeyDown = useCallback((e: KeyboardEvent) => {
+        const isBodyFocus = document.activeElement === document.body || document.activeElement === null
+        const isInterstingKey =
+            (!e.ctrlKey && !e.altKey && e.key === "Tab") ||
+            (!e.ctrlKey && e.key.length === 1) ||
+            (e.key === "Enter") ||
+            (e.ctrlKey && e.key === "v");
+
+        if (isBodyFocus && isInterstingKey)
+            focusPrompt();
+
+        if (e.key === "Enter") {
+            // prevent keydown pass to focused element
+            e.preventDefault();
+        }
+    }, []);
 
     useEffect(() => {
         // focus not bubble, so add event listener to body
-        document.body.addEventListener("focus", focusPrompt);
+        document.body.addEventListener("keydown", handleDocumentKeyDown);
         return () => {
-            document.body.removeEventListener("focus", focusPrompt);
+            document.body.removeEventListener("keydown", handleDocumentKeyDown);
         }
     }, []);
 
@@ -374,7 +380,7 @@ export default function ReadLine({ executing, pwd, onSubmitCommand, onAbortComma
             {showSuggestion && <SuggestionList word={currentWord}
                 pwd={pwd}
                 onSelected={(v) => { replaceCurrentWord(v); }}
-            onClose={() => { setShowSuggestion(false); focusPrompt(); }} />
+                onClose={() => { setShowSuggestion(false); focusPrompt(); }} />
             }
         </>
 
