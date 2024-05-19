@@ -286,8 +286,16 @@ export default function ReadLine({ executing, pwd, onSubmitCommand, onAbortComma
 
     //#endregion
 
+    const scrollToBottom = () => {
+        setTimeout(() => {
+            window.scrollTo({ top: document.body.scrollHeight });
+        }, 0);
+    };
+
+
     const handleInput = (input: string) => {
         insert(input);
+        scrollToBottom();
     }
 
     const handleKeyDown = async (e: React.KeyboardEvent) => {
@@ -335,9 +343,7 @@ export default function ReadLine({ executing, pwd, onSubmitCommand, onAbortComma
 
         if (keyHandled) {
             e.preventDefault();
-            setTimeout(() => {
-                window.scrollTo({ top: document.body.scrollHeight });
-            }, 0);
+            scrollToBottom();
         }
     }
 
