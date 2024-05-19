@@ -368,7 +368,8 @@ export default function ReadLine({ executing, pwd, onSubmitCommand, onAbortComma
     }, []);
 
     useEffect(() => {
-        if (!executing) focusPrompt();
+        const isTouchDevice = 'ontouchstart' in window;
+        if (!executing && !isTouchDevice) focusPrompt();
     }, [executing]);
 
     return !executing &&
