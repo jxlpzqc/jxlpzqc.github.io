@@ -116,3 +116,20 @@ html {
 .posts-list .mobile-a {
     @apply sm:text-inherit sm:no-underline;
 }
+
+@layer base {
+
+    /* prose styles */
+    .prose {
+        @apply prose-code:rounded prose-code:bg-white dark:prose-code:bg-gray-700 prose-code:bg-opacity-75
+        prose-code:p-1 prose-code:before:!content-none prose-code:after:!content-none
+    }
+
+    .prose section.footnotes {
+        @apply pt-4;
+    }
+
+    .prose section.footnotes>h2:first-child {
+        @apply hidden;
+    }
+}
