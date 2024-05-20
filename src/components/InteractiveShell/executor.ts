@@ -84,6 +84,12 @@ export function* executeCommand(command: string, pwd: string, history: CommandHi
                         newPwd = path;
                     }
                 }
+            } else if (result.externalLink && type === "go") {
+                window.location.href = result.externalLink;
+                newCommandHistory.runningStatusList?.push({
+                    type: "success",
+                    message: "External link, redirecting..."
+                });
             } else {
                 newCommandHistory.runningStatusList?.push({
                     type: "fail",

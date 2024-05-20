@@ -2,6 +2,7 @@
 export async function fetchContent(dir: string): Promise<{
     success: boolean;
     failMessage?: string;
+    externalLink?: string;
     type?: string;
     element?: HTMLElement;
 }> {
@@ -10,6 +11,9 @@ export async function fetchContent(dir: string): Promise<{
         let type: string = "";
         let element: HTMLElement | null;
         do {
+            if (url.startsWith("http://") || url.startsWith("https://") || url.startsWith("//")) {
+                return { success: false, externalLink: url, failMessage: "Could not fetch external content, try `go`."};
+            }
             const res = await fetch(url);
             if (res.status === 404) {
                 return { success: false, failMessage: "No such file or directory." };
