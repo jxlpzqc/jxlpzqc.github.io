@@ -31,7 +31,7 @@ const logoText = `  ___ _                     _
 
 
 export const SITE: Site = {
-    website: "https://chengzi233.cn/", // replace this with your deployed domain
+    website: "https://chengzi.tech/", // replace this with your deployed domain
     author: "chengzi",
     desc: "",
     title: "Chengzi's blog",
