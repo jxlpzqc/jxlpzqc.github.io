@@ -15,7 +15,7 @@ function ItemView({ item }: { item: FileSystemItem }) {
         </td>
 
         <td>
-            <a href={item.symlink || item.absPath} className="mobile-a">
+            <a href={item.symlink || item.absPath} className="title-link">
                 {item.collectionObject?.data?.title || item.desc || item.name}
             </a>
         </td>

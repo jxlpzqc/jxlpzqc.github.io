@@ -109,12 +109,9 @@ html {
     @apply hidden sm:table-cell;
 }
 
-.posts-list a {
-    @apply text-term-blue underline;
-}
 
-.posts-list .mobile-a {
-    @apply sm:text-inherit sm:no-underline;
+.posts-list .title-link {
+    @apply text-term-blue hover:underline;
 }
 
 @layer base {
