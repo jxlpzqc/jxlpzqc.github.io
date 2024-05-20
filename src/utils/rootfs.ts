@@ -157,6 +157,45 @@ function _treeAddAbsPath(current: FileSystemItem, absPath: string = ""): FileSys
 
 let _root: FileSystemItem | null = null;
 
+const links: FileSystemItem = {
+    name: "links",
+    type: "dir",
+    desc: "链接",
+    children: [
+        {
+            name: "friends",
+            type: "dir",
+            desc: "友情链接",
+            children: [
+                {
+                    name: "wjk.lnk",
+                    type: "symlink",
+                    desc: "wjk的博客",
+                    symlink: "https://wjk.moe"
+                },
+                {
+                    name: "ihopenot.lnk",
+                    type: "symlink",
+                    desc: "ihopenot的博客",
+                    symlink: "https://blog.ihopenot.men"
+                },
+                {
+                    name: "earthc.lnk",
+                    type: "symlink",
+                    desc: "earthc的博客",
+                    symlink: "https://b.earthc.moe"
+                }
+            ]
+        },
+        {
+            name: "github.lnk",
+            desc: "我的GitHub",
+            type: "symlink",
+            symlink: "https://github.com/jxlpzqc"
+        }
+    ]
+}
+
 export async function getRootFs(): Promise<FileSystemItem> {
 
     if (_root !== null) {
@@ -167,33 +206,34 @@ export async function getRootFs(): Promise<FileSystemItem> {
         {
             name: "posts",
             type: "dir",
-            desc: "All posts",
+            desc: "全部博文",
             children: getPosts(await getCollection('blog')),
         },
         {
             name: "tags",
             type: "dir",
-            desc: "Posts group by tags",
+            desc: "按标签分组",
             children: getTags(await getCollection('blog')),
         },
         {
             name: "recents",
             type: "dir",
-            desc: "Posts ordered by time",
+            desc: "按时间倒序",
             children: getRecents(await getCollection('blog')),
         },
         {
             name: "archives",
             type: "dir",
-            desc: "Posts group by year",
+            desc: "按年份分组",
             children: getArchives(await getCollection('blog')),
         },
+        links,
         {
             // if you want to change ext, change about.md.md file name,
             // and change ignore list in[...slug].astro
             name: "about.md",
             type: "file",
-            desc: "About me",
+            desc: "关于我",
             tag: [],
         }
     ];
