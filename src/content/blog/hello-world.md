@@ -1,58 +1,29 @@
 ---
-title: Hello World
+title: 开篇
 pubDate: 2024-05-17
+updatedDate: 2024-05-20
 heroImage: ./hello-world.svg
-tags: ["test"]
-description: "This is a test article."
 repost: false
 ---
 
-# Hello my blog post!
+从今天开始，我将开始写技术博客，记录自己的学习、想法以及其他一些有趣的事情。
 
-Hello, my new blog post!
+在写博客之前，我用 astro 搭建了这个博客网站，这个网站非常的特别，他看起来像一个 shell 解释器，可以输入命令，然后执行命令，来查看博客的内容。
 
-这是一篇测试文章。
+同时，他也是一个静态网站，可以被搜索引擎抓取，也支持 sitemap 和 RSS 订阅这些博客都有的功能。后期我还考虑加上评论功能，让大家可以在这里讨论。
 
-# 一级标题
+## 为什么我想开始写技术博客
 
-## 二级标题
+1. **记录自己的学习过程**：很多时候，我会在网上看到一些好的文章，或者有一些比较有意思的想法，但是过一段时间就忘记了，所以我想把我学到的东西记录下来，方便以后查阅。
+2. **提高自己的表达能力**：作为一个i人，平时也不太爱说话和表达。平时要写一段非常简单的话，甚至是函数的文档注释都需要 ChatGPT 辅助。写博客可以锻炼自己的表达能力，并且提高自己的写作水平。
+3. **分享一些想法**：当然，发布博客的目的更多的是为了分享自己的想法，希望我对一些问题的见解可以帮助到一些人。
 
-这是一个测试文章。
+## 该博客的内容
 
-### 三级标题
+目前，我打算写一些碎片性的文章，主要是编程技术相关的，比如针对一个具体问题，或者具体技术点的一些讨论。
 
-这是一个测试文章。
+当然，如果这些碎片性的文章受到了大家的喜欢，我会考虑把这些碎片性文章，补充、组织、整理成一些系列文章。
 
-This is a test article.
+## 最后
 
-[Link to Google](https://www.google.com)
-
-
-| Col1 | Col2 |
-| ---- | ---- |
-| 3    | 4    |
-| 5    | 6    |
-
-
-:joy: Github emoji
-
-
-This is a test code block:
-
-```rust
-pub struct Test {
-    name: String,
-}
-
-impl Test {
-    pub fn new(name: String) -> Self {
-        Self {
-            name,
-        }
-    }
-}
-
-fn main() {
-    println!("Hello, world!");
-}
-```
+“Hello, World” 是程序员写的第一个程序，也是我写的第一篇博客，希望这个博客从现在开始可以一直更新下去，也希望大家可以喜欢这个博客。
