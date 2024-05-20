@@ -1,6 +1,7 @@
 ---
 title: 简单理解 C++ 完美转发
 pubDate: 2024-05-19
+updatedDate: 2024-05-20
 tags:
   - C++
 repost: false
@@ -28,8 +29,6 @@ int main() {
 }
 ```
 
-下面，就可以解释为什么要有右值引用了。
-
 其实，引用的本质是地址，右值引用的本质也是地址，
 他绑定了一个临时对象。
 
@@ -44,7 +43,7 @@ int main() {
 所以，这里就引出了为什么要有完美转发。
 
 首先，看下面的例子中的 `test1`，由于 `int&` 只能绑定左值，而 `int&&` 只能绑定右值，
-，所以 `f(1)` 会调用 `f(int&&)`，`f(a)` 会调用 `f(int&)`。
+所以 `f(1)` 会调用 `f(int&&)`，`f(a)` 会调用 `f(int&)`。
 
 ```cpp
 void f(int& a) {
@@ -104,12 +103,15 @@ constexpr T&& forward(std::remove_reference_t<T>&& arg) noexcept{
 
 首先看第二个函数，右值引用只能接受右值，当 `forward` 一个右值， 比如 `forword(1)` 的时候，会调用这个重载。模板实例化时，`T&&` 会被实例化为 `int && &&` ，根据引用折叠规则，等于 `int &&` 。
 
-至于什么是引用折叠规则呢，可以参考 cppreference [2]，简单来说，只有模板展开时，只有&& && 等于右值引用，其他的都等于左值引用。
+至于什么是引用折叠规则呢，可以参考 cppreference [^2]，简单来说，只有模板展开时，只有 `&& &&` 等于右值引用，其他的都等于左值引用。
 
+
+> ```
 > lref&  r1 = n; // r1 的类型是 int&
 > lref&& r2 = n; // r2 的类型是 int&
 > rref&  r3 = n; // r3 的类型是 int&
 > rref&& r4 = 1; // r4 的类型是 int&&
+> ```
 
 可能这个时候又会有人抬杠了，“诶，你这个返回的不是右值引用吗？**可是右值引用是左值啊。怎么 `forward` 一个右值，得到了左值呢？**”
 
@@ -128,12 +130,8 @@ constexpr T&& forward(std::remove_reference_t<T>&& arg) noexcept{
 根据上面的分析：
 
 - `forward(1)` -> 右值
-
 - `forward(a)` -> 右值
-
 - `forward(b)` -> 左值
-
-
 
 ## 完美转发的使用
 
@@ -153,12 +151,9 @@ void fwd(Ts&&... params)            //接受任何实参
 
 ## 完美转发并不完美
 
-但是，令人遗憾的是，`std::forward` 并不是总是能完美的，《Effective Mordern C++》的第30条款 里面详细介绍了这种情况，但是由于我才学疏浅，这里就不展开了。
+但是，令人遗憾的是，`std::forward` 并不是总是能完美的，《Effective Mordern C++》的第30条款 [^3] 里面详细介绍了这种情况，但是由于我才学疏浅，这里就不展开了。
 
 
-
-[^1] https://zh.cppreference.com/w/cpp/language/value_category#.E5.B7.A6.E5.80.BC
-
-[^2] [引用声明 - cppreference.com](https://zh.cppreference.com/w/cpp/language/reference)
-
-[^3] [Item 30:熟悉完美转发失败的情况 - Effective Modern C++ (cntransgroup.github.io)](https://cntransgroup.github.io/EffectiveModernCppChinese/5.RRefMovSemPerfForw/item30.html)
+[^1]: [值类别 - cppreference](https://zh.cppreference.com/w/cpp/language/value_category#.E5.B7.A6.E5.80.BC)
+[^2]: [引用声明 - cppreference](https://zh.cppreference.com/w/cpp/language/reference)
+[^3]: [熟悉完美转发失败的情况 - Effective Modern C++](https://cntransgroup.github.io/EffectiveModernCppChinese/5.RRefMovSemPerfForw/item30.html)
