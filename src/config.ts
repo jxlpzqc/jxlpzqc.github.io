@@ -20,6 +20,13 @@ export type Site = {
         light: string
     };
     umamiWebsiteID?: string;
+    giscus?: {
+        repo: `${string}/${string}`,
+        repoId: string,
+        category: string,
+        categoryId: string,
+        lang: string
+    }
 };
 
 // use figlet to generate a logo
@@ -46,5 +53,12 @@ export const SITE: Site = {
         light: "/logo.svg",
         dark: "/logo-dark.svg"
     },
-    umamiWebsiteID: "5a8f4e8b-5b23-4928-91a2-0ae51dce1926"
+    umamiWebsiteID: "5a8f4e8b-5b23-4928-91a2-0ae51dce1926",
+    giscus: {
+        repo: "jxlpzqc/jxlpzqc.github.io",
+        repoId: "R_kgDOL8VGJg",
+        category: "Comments",
+        categoryId: "DIC_kwDOL8VGJs4CfhyR",
+        lang: "zh-CN",
+    }
 };

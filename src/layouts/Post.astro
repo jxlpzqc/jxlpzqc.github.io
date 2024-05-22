@@ -2,6 +2,7 @@
 import ShellPage from "./ShellPage.astro";
 import type { CollectionEntry } from "astro:content";
 import type { FileSystemItem } from "@utils/filesystem";
+import { SITE } from "@config";
 
 import { normalize } from "path";
 import { Image } from "astro:assets";
@@ -128,23 +129,27 @@ if (post.data.heroImage) {
             <Content />
         </article>
 
-        <div class="mt-8">
-            <Giscus
-                client:only="react"
-                repo="jxlpzqc/jxlpzqc.github.io"
-                repoId="R_kgDOL8VGJg"
-                category="Comments"
-                categoryId="DIC_kwDOL8VGJs4CfhyR"
-                mapping="pathname"
-                strict="0"
-                reactionsEnabled="1"
-                emitMetadata="0"
-                inputPosition="top"
-                theme="preferred_color_scheme"
-                lang="zh-CN"
-                loading="lazy"
-            />
-        </div>
+        {
+            SITE.giscus && (
+                <div class="mt-8">
+                    <Giscus
+                        client:only="react"
+                        repo={SITE.giscus.repo}
+                        repoId={SITE.giscus.repoId}
+                        category={SITE.giscus.category}
+                        categoryId={SITE.giscus.categoryId}
+                        mapping="specific"
+                        term={file.absPath}
+                        strict="0"
+                        reactionsEnabled="1"
+                        emitMetadata="0"
+                        inputPosition="top"
+                        theme="preferred_color_scheme"
+                        lang={SITE.giscus.lang}
+                        loading="lazy"
+                    />
+                </div>
+            )
+        }
     </div>
-
 </ShellPage>
