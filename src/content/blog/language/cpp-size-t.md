@@ -1,9 +1,7 @@
 ---
 title: printf 怎么打印 size_t
-pubDate: 2024-05-19
-updatedDate: 2024-05-20
+pubDate: 2024-05-22
 tags:
-
 - C++
 repost: false
 ---
