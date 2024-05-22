@@ -17,7 +17,6 @@ repost: false
 int writed = write(fd, buf, count);
 
 // sample 2: use size_t or vector<int>::size_type
-//           or just use auto
 for (int a = 0; a < vec.size(); ++a);
 
 // sample 3: use ptrdiff_t
