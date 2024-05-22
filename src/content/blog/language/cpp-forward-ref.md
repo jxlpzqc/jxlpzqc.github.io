@@ -1,7 +1,7 @@
 ---
 title: 简单理解 C++ 完美转发
 pubDate: 2024-05-19
-updatedDate: 2024-05-20
+updatedDate: 2024-05-22
 tags:
   - C++
 repost: false
@@ -96,7 +96,7 @@ constexpr T&& forward(std::remove_reference_t<T>&& arg) noexcept{
 
 首先看第二个函数，右值引用只能接受右值，当 `forward` 一个右值， 比如 `forword(1)` 的时候，会调用这个重载。模板实例化时，`T&&` 会被实例化为 `int && &&` ，根据引用折叠规则，等于 `int &&` 。
 
-至于什么是引用折叠规则呢，可以参考 cppreference [^2]，简单来说，只有模板展开时，只有 `&& &&` 等于右值引用，其他的都等于左值引用。
+至于什么是引用折叠规则呢，可以参考 cppreference [^2]，简单来说，在模板展开时，只有 `&& &&` 等于右值引用，其他的都等于左值引用。
 
 > ```cpp
 > lref&  r1 = n; // r1 的类型是 int&
@@ -121,6 +121,8 @@ constexpr T&& forward(std::remove_reference_t<T>&& arg) noexcept{
 - `forward(a)` -> 右值
 - `forward(b)` -> 左值
 
+这就实现了我们上一个小节说的“让右值引用可以表现为右值，左值引用可以表现为左值。”同时他还能保证右值的形态不发生改变。
+
 ## 完美转发的使用
 
 通常来说，在编写模板函数的时候，完美转发需要配合转发引用（万能引用）一起使用，实现完美转发，下面是一个例子：
@@ -133,7 +135,7 @@ void fwd(Ts&&... params)            //接受任何实参
 }
 ```
 
-像这种新式，在STL的 `emplace` 函数可以经常见到。
+像这种形式，在STL的 `emplace` 函数可以经常见到。
 
 ## 完美转发并不完美
 
