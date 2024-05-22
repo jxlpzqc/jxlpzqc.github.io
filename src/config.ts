@@ -19,6 +19,7 @@ export type Site = {
         dark: string,
         light: string
     };
+    umamiWebsiteID?: string;
 };
 
 // use figlet to generate a logo
@@ -44,5 +45,6 @@ export const SITE: Site = {
     logoImg: {
         light: "/logo.svg",
         dark: "/logo-dark.svg"
-    }
+    },
+    umamiWebsiteID: "5a8f4e8b-5b23-4928-91a2-0ae51dce1926"
 };

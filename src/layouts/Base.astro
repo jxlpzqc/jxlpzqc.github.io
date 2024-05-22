@@ -2,7 +2,6 @@
 import { Header } from "@components/Header";
 import { SITE } from "@config";
 import "@styles/global.css";
-import { ViewTransitions } from "astro:transitions";
 
 export interface Props {
   title?: string;
@@ -80,14 +79,31 @@ const socialImageURL = new URL(
     <meta property="twitter:image" content={socialImageURL} />
 
     <!-- font from CDN, lazy load -->
-    <link rel="preload" href="https://cdn.bootcdn.net/ajax/libs/firacode/6.2.0/fira_code.css"
-      as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <link
+      rel="preload"
+      href="https://cdn.bootcdn.net/ajax/libs/firacode/6.2.0/fira_code.css"
+      as="style"
+      onload="this.onload=null;this.rel='stylesheet'"
+    />
     <noscript>
-      <link rel="stylesheet" href="https://cdn.bootcdn.net/ajax/libs/firacode/6.2.0/fira_code.css">
+      <link
+        rel="stylesheet"
+        href="https://cdn.bootcdn.net/ajax/libs/firacode/6.2.0/fira_code.css"
+      />
     </noscript>
 
+    {
+      SITE.umamiWebsiteID && <script
+          defer
+          src="https://cloud.umami.is/script.js"
+          data-website-id={SITE.umamiWebsiteID}
+        />
+    }
   </head>
-  <body class="bg-term-bg text-term-normal font-mono min-h-screen" tabindex={-1}>
+  <body
+    class="bg-term-bg text-term-normal font-mono min-h-screen"
+    tabindex={-1}
+  >
     <Header client:idle />
     <main>
       <slot />
