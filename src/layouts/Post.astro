@@ -3,8 +3,9 @@ import ShellPage from "./ShellPage.astro";
 import type { CollectionEntry } from "astro:content";
 import type { FileSystemItem } from "@utils/filesystem";
 
-import {normalize} from "path";
+import { normalize } from "path";
 import { Image } from "astro:assets";
+import Giscus from "@giscus/react";
 
 export type Props = {
     post: CollectionEntry<"blog">;
@@ -27,21 +28,24 @@ const metaDate =
         ? `, updated on ${formatDate(post.data.updatedDate)}`
         : "");
 
-let imageUrl :any;
+let imageUrl: any;
 
 if (post.data.heroImage) {
     if (post.data.heroImage.startsWith("http")) {
-        imageUrl = post.data.heroImage
+        imageUrl = post.data.heroImage;
     } else if (post.data.heroImage.startsWith("/")) {
-        imageUrl = post.data.heroImage
+        imageUrl = post.data.heroImage;
     } else {
-        const path = normalize("/src/content/blog/" + post.id.substring(
-            0,
-            post.id.lastIndexOf("/") + 1
-        ) + post.data.heroImage).replace(/\\/g, "/");
+        const path = normalize(
+            "/src/content/blog/" +
+                post.id.substring(0, post.id.lastIndexOf("/") + 1) +
+                post.data.heroImage,
+        ).replace(/\\/g, "/");
 
-        const images = import.meta.glob('/src/content/**/*.{svg,jpeg,jpg,png,gif}');
-        
+        const images = import.meta.glob(
+            "/src/content/**/*.{svg,jpeg,jpg,png,gif}",
+        );
+
         if (!images[path]) {
             console.error("[WARN] Image not found: " + path);
         } else {
@@ -49,12 +53,14 @@ if (post.data.heroImage) {
         }
     }
 }
-
-
 ---
 
 <ShellPage currentPath={path} command={"cat " + file.absPath}>
-    <div class="command-result mb-8 mt-4" id="init-content" data-init-type="file">
+    <div
+        class="command-result mb-8 mt-4"
+        id="init-content"
+        data-init-type="file"
+    >
         {
             post.data.heroImage && (
                 <Image
@@ -93,7 +99,9 @@ if (post.data.heroImage) {
                 post.data.description && (
                     <>
                         <dt>Description</dt>
-                        <dd class="!col-start-1 !col-span-2">{post.data.description}</dd>
+                        <dd class="!col-start-1 !col-span-2">
+                            {post.data.description}
+                        </dd>
                     </>
                 )
             }
@@ -103,14 +111,40 @@ if (post.data.heroImage) {
             <button class="btn-primary hidden-in-less" data-command="less">
                 Pipe to less (C-h)
             </button>
-            <button class="btn-primary hidden-in-less" data-command="copylink" data-link={file.absPath}>
+            <button
+                class="btn-primary hidden-in-less"
+                data-command="copylink"
+                data-link={file.absPath}
+            >
                 Copy link
             </button>
         </div>
 
-        <article role="article" class="prose prose-neutral dark:prose-invert prose-lg max-w-screen-md
-            prose-h1:text-3xl prose-h2:text-2xl prose-h3:text-xl">
+        <article
+            role="article"
+            class="prose prose-neutral dark:prose-invert prose-lg max-w-screen-md
+            prose-h1:text-3xl prose-h2:text-2xl prose-h3:text-xl"
+        >
             <Content />
         </article>
+
+        <div class="mt-8">
+            <Giscus
+                client:only="react"
+                repo="jxlpzqc/jxlpzqc.github.io"
+                repoId="R_kgDOL8VGJg"
+                category="Comments"
+                categoryId="DIC_kwDOL8VGJs4CfhyR"
+                mapping="pathname"
+                strict="0"
+                reactionsEnabled="1"
+                emitMetadata="0"
+                inputPosition="top"
+                theme="preferred_color_scheme"
+                lang="zh-CN"
+                loading="lazy"
+            />
+        </div>
     </div>
+
 </ShellPage>
