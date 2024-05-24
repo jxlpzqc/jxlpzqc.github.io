@@ -1,9 +1,12 @@
 ---
 title: 区分 x86 中 CPL/RPL/DPL 特权级别
 pubDate: 2024-05-24
-heroImage: ./hello-world.svg
 repost: false
 description: 这篇文章简要区分一下 x86 不同特权级别的作用。
+heroImage: ./protection.png
+tags: 
+  - x86
+  - os
 ---
 
 之前总觉得 x86 特权级校验的规则很难记住，但是今天归纳了一下发现其机制非常简单。
