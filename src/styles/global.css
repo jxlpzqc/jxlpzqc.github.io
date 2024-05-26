@@ -83,37 +83,6 @@ html {
     scroll-padding-top: 96px;
 }
 
-/* post list styles */
-.posts-list thead::after {
-    content: "";
-    display: table-row;
-    height: 1rem;
-}
-
-.posts-list tbody::before {
-    content: "";
-    display: table-row;
-    height: 1rem;
-    @apply border-t-2 border-term-normal border-dashed;
-}
-
-.posts-list th,
-.posts-list td {
-    vertical-align: top;
-    text-align: left;
-}
-
-/* hide first col in mobile */
-.posts-list td:first-child,
-.posts-list th:first-child {
-    @apply hidden sm:table-cell;
-}
-
-
-.posts-list .title-link {
-    @apply text-term-blue hover:underline;
-}
-
 @layer base {
 
     /* prose styles */

@@ -1,10 +1,13 @@
 import { getCollection, type CollectionEntry } from "astro:content";
 import type { FileSystemItem } from "./filesystem";
 import { SITE } from "@config";
+import fsPromise from "fs/promises";
+import fs from "fs";
+import yaml from "yaml"
 
 const postExt = SITE.postExt;
 
-function getPosts(blogs: CollectionEntry<'blog'>[]): FileSystemItem[] {
+async function getPosts(blogs: CollectionEntry<'blog'>[]): Promise<FileSystemItem[]> {
 
     let ret: FileSystemItem[] = [];
 
@@ -24,10 +27,23 @@ function getPosts(blogs: CollectionEntry<'blog'>[]): FileSystemItem[] {
             } else {
                 let schild = current.find((child) => child.name === slug);
                 if (schild === undefined) {
+                    const realPath = "src/content/blog/" + slugs.slice(0, i + 1).join("/");
+                    const dirStat = await fsPromise.stat(realPath);
+
+                    const ymlPath = realPath + "/dir.yml";
+                    let desc;
+                    if (fs.existsSync(ymlPath)) {
+                        const d = await fsPromise.readFile(ymlPath, "utf-8");
+                        const meta = yaml.parse(d);
+                        desc = meta?.desc;
+                    }
+
                     const newChild: FileSystemItem = {
                         name: slug,
                         type: "dir",
+                        desc,
                         tag: [],
+                        date: dirStat.mtime,
                         children: []
                     };
                     current.push(newChild);
@@ -123,6 +139,8 @@ function getArchives(blogs: CollectionEntry<'blog'>[]): FileSystemItem[] {
             current = {
                 name: year.toString(),
                 type: "dir",
+                date: new Date(year, 0, 1),
+                desc: year.toString() + " 合集",
                 tag: [],
                 children: []
             };
@@ -207,7 +225,7 @@ export async function getRootFs(): Promise<FileSystemItem> {
             name: "posts",
             type: "dir",
             desc: "全部博文",
-            children: getPosts(await getCollection('blog')),
+            children: await getPosts(await getCollection('blog')),
         },
         {
             name: "tags",

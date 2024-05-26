@@ -8,6 +8,7 @@ export type FileSystemItem = {
     tag?: string[];
     desc?: string;
     absPath?: string;
+    date?: Date;
     collectionObject?: CollectionEntry<'blog'>;
     children?: FileSystemItem[];
 }

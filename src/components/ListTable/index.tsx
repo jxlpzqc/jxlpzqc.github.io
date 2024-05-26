@@ -7,23 +7,22 @@ export type Props = {
 };
 
 function ItemView({ item }: { item: FileSystemItem }) {
-    return <tr>
-        <td>
-            <a href={item.symlink || item.absPath} className="file-name">
+    return <li className="pb-2 last:pb-0 ">
+        <div className="flex justify-between">
+            <a className="file-name">
                 {item.name + (item.type === "dir" ? "/" : "")}
             </a>
-        </td>
-
-        <td>
-            <a href={item.symlink || item.absPath} className="title-link">
+            <div>{item.date?.toLocaleDateString() || item.collectionObject?.data?.pubDate.toLocaleDateString()}</div>
+        </div>
+        <div className="flex justify-between">
+            <a href={item.symlink || item.absPath} className="text-term-blue hover:underline">
                 {item.collectionObject?.data?.title || item.desc || item.name}
             </a>
-        </td>
-
-        <td>
             <div className="text-gray-500">{item.tag?.join(", ")}</div>
-        </td>
-    </tr>
+        </div>
+
+    </li>
+
 }
 
 export default function (props: Props) {
@@ -39,19 +38,11 @@ export default function (props: Props) {
                 The directory contains too many files, you may
                 <a href="" className="text-term-blue" data-command="less"> pipe to less (C-h)</a>.
             </div>}
-            <table className={`table-auto w-full *:text-left posts-list`}>
-                <thead>
-                    <tr>
-                        <th>Name</th>
-                        <th>Title</th>
-                        <th className="w-1/4" >Tags</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {
-                        children.map((item) => (<ItemView item={item} key={item.absPath} />))
-                    }
-                </tbody>
-            </table>
+            <ul>
+                {
+                    children.map((item) => (<ItemView item={item} key={item.absPath} />))
+                }
+
+            </ul>
         </div>);
 }
