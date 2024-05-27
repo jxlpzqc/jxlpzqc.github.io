@@ -8,13 +8,13 @@ export type Props = {
 
 function ItemView({ item }: { item: FileSystemItem }) {
     return <li className="pb-2 last:pb-0 ">
-        <div className="flex justify-between">
+        <div className="flex justify-between break-all gap-2">
             <a className="file-name">
                 {item.name + (item.type === "dir" ? "/" : "")}
             </a>
             <div>{item.date?.toLocaleDateString() || item.collectionObject?.data?.pubDate.toLocaleDateString()}</div>
         </div>
-        <div className="flex justify-between">
+        <div className="flex flex-wrap justify-between">
             <a href={item.symlink || item.absPath} className="text-term-blue hover:underline">
                 {item.collectionObject?.data?.title || item.desc || item.name}
             </a>
