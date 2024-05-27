@@ -30,7 +30,7 @@ async function getPosts(blogs: CollectionEntry<'blog'>[]): Promise<FileSystemIte
                     const realPath = "src/content/blog/" + slugs.slice(0, i + 1).join("/");
                     const dirStat = await fsPromise.stat(realPath);
 
-                    const ymlPath = realPath + "/dir.yml";
+                    const ymlPath = realPath + "/.directory";
                     let desc;
                     if (fs.existsSync(ymlPath)) {
                         const d = await fsPromise.readFile(ymlPath, "utf-8");
