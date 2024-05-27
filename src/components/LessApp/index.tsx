@@ -83,7 +83,7 @@ export default function LessApp(props: Props) {
 
     };
 
-    const handleScroll = (e: React.UIEvent) => {
+    const handleScroll = (_e: React.UIEvent) => {
         const element = appRef.current;
         if (!element) return;
 

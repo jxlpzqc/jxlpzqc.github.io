@@ -1,5 +1,5 @@
 import ShellPrompt from "@components/ShellPrompt";
-import { useEffect, useRef, useState, type ReactElement, type ReactNode } from "react";
+import { useEffect, useRef, useState } from "react";
 import { executeCommand } from "./executor";
 import ReadLine from "./ReadLine";
 import type { FullScreenAppRequest } from "./FullScreenApp";

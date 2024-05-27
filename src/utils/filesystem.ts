@@ -1,4 +1,4 @@
-import { getCollection, type CollectionEntry } from "astro:content";
+import { type CollectionEntry } from "astro:content";
 import { getRootFs } from "./rootfs";
 
 export type FileSystemItem = {
