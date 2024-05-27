@@ -1,5 +1,6 @@
 import type { FileSystemItem } from "@utils/filesystem";
 import { SITE } from "@config"
+import { formatDate } from "@utils/date";
 
 export type Props = {
     file: FileSystemItem;
@@ -12,7 +13,7 @@ function ItemView({ item }: { item: FileSystemItem }) {
             <a className="file-name">
                 {item.name + (item.type === "dir" ? "/" : "")}
             </a>
-            <div>{item.date?.toLocaleDateString() || item.collectionObject?.data?.pubDate.toLocaleDateString()}</div>
+            <div>{formatDate(item.date) || formatDate(item.collectionObject?.data?.pubDate)}</div>
         </div>
         <div className="flex flex-wrap justify-between">
             <a href={item.symlink || item.absPath} className="text-term-blue hover:underline">
