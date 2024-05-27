@@ -15,7 +15,7 @@ export interface Props {
 }
 
 const {
-  title = SITE.title,
+  title: _title = SITE.title,
   author = SITE.author,
   description = SITE.desc,
   ogImage = SITE.ogImage,
@@ -24,6 +24,8 @@ const {
   modDatetime,
   scrollSmooth = false,
 } = Astro.props;
+
+const title = _title ? `${_title} - ${SITE.title}` : SITE.title;
 
 const socialImageURL = new URL(
   ogImage ?? SITE.ogImage ?? "og.png",
@@ -93,11 +95,13 @@ const socialImageURL = new URL(
     </noscript>
 
     {
-      SITE.umamiWebsiteID && <script
+      SITE.umamiWebsiteID && (
+        <script
           defer
           src="https://cloud.umami.is/script.js"
           data-website-id={SITE.umamiWebsiteID}
         />
+      )
     }
   </head>
   <body

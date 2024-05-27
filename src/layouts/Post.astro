@@ -56,7 +56,12 @@ if (post.data.heroImage) {
 }
 ---
 
-<ShellPage currentPath={path} command={"cat " + file.absPath}>
+<ShellPage currentPath={path} command={"cat " + file.absPath} baseProps={{
+    title: post.data.title,
+    description: post.data.description,
+    pubDatetime: post.data.pubDate,
+    modDatetime: post.data.updatedDate,
+}}>
     <div
         class="command-result mb-8 mt-4"
         id="init-content"

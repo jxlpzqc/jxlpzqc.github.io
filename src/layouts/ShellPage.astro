@@ -2,16 +2,18 @@
 import Base from "./Base.astro";
 import ShellPrompt from "@components/ShellPrompt";
 import { InteractiveShell } from "@components/InteractiveShell";
+import type { Props as BaseProps } from "@layouts/Base.astro";
 
 export interface Props {
     currentPath: string;
     command: string;
+    baseProps?: BaseProps;
 }
 
-const { currentPath: current, command }: Props = Astro.props;
+const { currentPath: current, command, baseProps }: Props = Astro.props;
 ---
 
-<Base>
+<Base {...baseProps}>
     <div
         class="max-w-screen-md mx-auto p-8 text-lg"
         style="line-height: 1.5rem;"

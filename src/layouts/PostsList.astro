@@ -20,7 +20,13 @@ const command = "ls " + (path === file.absPath ? "" : file.absPath);
 const currentFile = isListCurrent ? file : await getFsItem(path);
 ---
 
-<ShellPage currentPath={path} command={command}>
+<ShellPage
+    currentPath={path}
+    command={command}
+    baseProps={{
+        title: isListCurrent ? file.desc : undefined,
+    }}
+>
     {
         isListCurrent ? (
             <div class="my-8" id="init-content" data-init-type="list">

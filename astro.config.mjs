@@ -6,11 +6,12 @@ import react from "@astrojs/react";
 import rehypeAutoLinkHeadings from 'rehype-autolink-headings';
 import rehypeSlug from 'rehype-slug';
 import remarkEmoji from 'remark-emoji';
+import { SITE } from './src/config'
 
 
 // https://astro.build/config
 export default defineConfig({
-  site: 'https://example.com',
+  site: SITE.website,
   integrations: [mdx(), sitemap(), tailwind(), react()],
   image: {
     service: passthroughImageService(),
