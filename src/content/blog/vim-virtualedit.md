@@ -1,6 +1,6 @@
 ---
 title: vim visual block 的一些配置
-pubDate: 2024-05-20
+pubDate: 2024-05-28
 tags:
   - vim
 ---
