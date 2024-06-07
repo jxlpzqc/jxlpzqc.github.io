@@ -4,6 +4,7 @@ type FetchContentResult = {
     externalLink?: string;
     type?: string;
     element?: HTMLElement;
+    title?: string;
 }
 
 // NOTE: the caches never expire.
@@ -28,6 +29,7 @@ async function fetchContentNoCache(url: string): Promise<FetchContentResult> {
     try {
         let type: string = "";
         let element: HTMLElement | null;
+        let title: string | undefined;
         do {
             if (url.startsWith("http://") || url.startsWith("https://") || url.startsWith("//")) {
                 return { success: false, externalLink: url, failMessage: "Could not fetch external content, try `go`." };
@@ -41,6 +43,7 @@ async function fetchContentNoCache(url: string): Promise<FetchContentResult> {
             const text = await res.text();
             const dom = new DOMParser().parseFromString(text, "text/html");
             element = dom.getElementById("init-content");
+            title = dom.title;
 
             type = element?.dataset?.initType || "";
             if (!type) throw new Error("No type.");
@@ -51,7 +54,7 @@ async function fetchContentNoCache(url: string): Promise<FetchContentResult> {
             }
         } while (type === "symlink");
         if (element && type) {
-            return { success: true, type, element: element };
+            return { success: true, type, element: element, title };
         }
         return { success: false, failMessage: "Failed to fetch item." };
     }

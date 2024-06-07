@@ -25,6 +25,11 @@ export function* executeCommand(command: string, pwd: string, history: CommandHi
 
     let newPwd = pwd;
 
+    const updateHistoryAndTitle = (history?: string, title?: string) => {
+        if (history) window.history.pushState({}, "", history);
+        if (title) document.title = title;
+    }
+
     const getRemoteCommandResult = async (path: string, type: 'cd' | 'ls' | 'cat' | 'go' | 'less') => {
         try {
             const result = await fetchContent(path);
@@ -33,7 +38,7 @@ export function* executeCommand(command: string, pwd: string, history: CommandHi
                     if (result.type === "list") {
                         newCommandHistory.runningStatusList = [];
                         newPwd = path;
-                        window.history.pushState({}, "", newPwd);
+                        updateHistoryAndTitle(newPwd, result.title);
                     } else {
                         newCommandHistory.runningStatusList?.push({
                             type: "fail",
@@ -80,9 +85,8 @@ export function* executeCommand(command: string, pwd: string, history: CommandHi
                 } else if (type === 'go') {
                     newCommandHistory.runningStatusList = [];
                     newCommandHistory.resultElement = result.element;
-                    if (result.type === "list") {
-                        newPwd = path;
-                    }
+                    if (result.type === "list") newPwd = path;
+                    updateHistoryAndTitle(newPwd, result.title);
                 }
             } else if (result.externalLink && type === "go") {
                 window.location.href = result.externalLink;

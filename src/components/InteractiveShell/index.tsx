@@ -122,12 +122,6 @@ export function InteractiveShell({ originPwd }: { originPwd: string }) {
             }
             e.preventDefault();
             if (path) {
-                try {
-                    window.history.pushState({}, "", path);
-                } catch (e) {
-                    // external link
-                    console.error(e);
-                }
                 sendGoCommand(path);
             }
         }
