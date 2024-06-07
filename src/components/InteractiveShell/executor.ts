@@ -127,11 +127,7 @@ export function* executeCommand(command: string, pwd: string, history: CommandHi
             newHistory.length = 0;
             yield { histories: newHistory, pwd: newPwd };
         } else if (action.type === "cd") {
-            let inputDir = action.path!;
-            if (!inputDir) {
-                newCommandHistory.runningStatusList = [{ type: "fail", message: "cd: no argument." }];
-                continue;
-            }
+            let inputDir = action.path || "/";
             inputDir = getAbsoluteDir(inputDir, pwd);
             yield getRemoteCommandResult(inputDir, 'cd');
         } else if (action.type === "view") {

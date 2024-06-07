@@ -23,29 +23,34 @@ function parseSingleCommand(command: string): Action {
     if (command === "clear") {
         return { type: "clear" };
     }
-    if (command.startsWith("cd")) {
-        const path = command.split(" ")[1];
-        if (!path) {
-            return { type: "error", message: "cd: no argument." };
-        }
+    let match: RegExpExecArray | null;
+    if (match = /^cd(\s+(\S+?))?(\s+.+)?$/.exec(command)) {
+        const path = match[2] || "/", other = match[3];
+        if (other) return { type: 'error', message: "cd: too many arguments" };
         return { type: "cd", path };
     }
-    if (command.startsWith("less")) {
-        const path = command.split(" ")[1];
-        if (!path) {
-            return { type: "error", message: "less: no argument." };
-        }
+    if (match = /^less(\s+(\S+?))?(\s+.+)?$/.exec(command)) {
+        const path = match[2], other = match[3];
+        if (!path) return { type: "error", message: "less: no argument." };
+        if (other) return { type: "error", message: "less: too many arguments" }
         return { type: "view", path, viewer: "less" };
     }
-    if (command.startsWith("cat")) {
-        const path = command.split(" ")[1];
-        if (!path) {
-            return { type: "error", message: "cat: no argument." };
-        }
+    if (match = /^less(\s+(\S+?))?(\s+.+)?$/.exec(command)) {
+        const path = match[2], other = match[3];
+        if (!path) return { type: "error", message: "less: no argument." };
+        if (other) return { type: "error", message: "less: too many arguments" }
+        return { type: "view", path, viewer: "less" };
+    }
+    if (match = /^cat(\s+(\S+?))?(\s+.+)?$/.exec(command)) {
+        const path = match[2], other = match[3];
+        if (!path) return { type: "error", message: "less: no argument." };
+        if (other) return { type: "error", message: "less: too many arguments" }
         return { type: "view", path, viewer: "cat" };
     }
-    if (command.startsWith("ls")) {
-        return { type: "list", path: command.split(" ")[1] };
+    if (match = /^ls(\s+(\S+?))?(\s+.+)?$/.exec(command)) {
+        const path = match[2], other = match[3];
+        if (other) return { type: "error", message: "ls: too many arguments" };
+        return { type: "list", path };
     }
     if (command.startsWith("go")) {
         const path = command.split(" ")[1];
