@@ -4,4 +4,3 @@ TODO:
 - [ ] env: LINK_AS_GO=1
 - [ ] go change title
 - [ ] lighthouse
-- [ ] cache

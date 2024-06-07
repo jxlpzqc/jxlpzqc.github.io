@@ -1,18 +1,36 @@
-
-export async function fetchContent(dir: string): Promise<{
+type FetchContentResult = {
     success: boolean;
     failMessage?: string;
     externalLink?: string;
     type?: string;
     element?: HTMLElement;
-}> {
-    let url = dir;
+}
+
+// NOTE: the caches never expire.
+const cache = new Map<string, FetchContentResult>();
+
+export async function fetchContent(url: string): Promise<FetchContentResult> {
+    const getCacheCopy = (u: string) => {
+        const ret = cache.get(u)!;
+        if (ret.element) ret.element = ret.element.cloneNode(true) as HTMLElement;
+        return ret;
+    };
+
+    if (cache.has(url)) return getCacheCopy(url);
+    else {
+        const result = await fetchContentNoCache(url);
+        cache.set(url, result);
+        return getCacheCopy(url);
+    }
+}
+
+async function fetchContentNoCache(url: string): Promise<FetchContentResult> {
     try {
         let type: string = "";
         let element: HTMLElement | null;
         do {
             if (url.startsWith("http://") || url.startsWith("https://") || url.startsWith("//")) {
-                return { success: false, externalLink: url, failMessage: "Could not fetch external content, try `go`."};
+                return { success: false, externalLink: url, failMessage: "Could not fetch external content, try `go`." };
             }
             const res = await fetch(url);
             if (res.status === 404) {
