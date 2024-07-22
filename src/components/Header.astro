@@ -1,0 +1,158 @@
+---
+import { SITE } from "@config";
+
+const {
+    logoImg,
+    logoText
+} = SITE;
+---
+
+<header
+    class="sticky top-0 bg-term-bg z-20 shadow-md
+    dark:bg-[#343434] dark:shadow-black"
+>
+    <div
+        class={`sm:flex justify-between items-center
+        max-w-screen-md px-8 mx-auto`}
+    >
+        <div class="w-full sm:w-fit flex justify-between items-center h-[80px]">
+            <a href="/" class="text-xs font-bold leading-3">
+                {
+                    logoImg ? (
+                        typeof logoImg === "string" ? (
+                            <img
+                                class="h-[60px]"
+                                src={logoImg}
+                                alt="logo"
+                            />
+                        ) : (
+                            <>
+                                <img
+                                    class="h-[60px] dark:hidden"
+                                    src={logoImg.light}
+                                    alt="logo"
+                                />
+                                <img
+                                    class="h-[60px] hidden dark:inline"
+                                    src={logoImg.dark}
+                                    alt="logo"
+                                />
+                            </>
+                        )
+                    ) : (
+                        <pre>{logoText}</pre>
+                    )
+                }
+            </a>
+
+            <div class="self-center sm:hidden">
+                <button
+                    class="focus-outline"
+                    id="main-nav-switch-btn"
+                    aria-label="Open Menu"
+                    aria-expanded="false"
+                    aria-controls="menu-items"
+                >
+                    <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="24"
+                        height="24"
+                        class="menu-icon"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                    >
+                        <g
+                            id="main-nav-switch-g-open"
+                            class="transition-opacity"
+                        >
+                            <line x1="7" y1="12" x2="21" y2="12" class="line"
+                            ></line>
+                            <line x1="3" y1="6" x2="21" y2="6" class="line"
+                            ></line>
+                            <line x1="12" y1="18" x2="21" y2="18" class="line"
+                            ></line>
+                        </g>
+                        <g
+                            opacity={0}
+                            id="main-nav-switch-g-close"
+                            class="transition-opacity"
+                        >
+                            <line x1="18" y1="6" x2="6" y2="18" class="close"
+                            ></line>
+                            <line x1="6" y1="6" x2="18" y2="18" class="close"
+                            ></line>
+                        </g>
+                    </svg>
+                </button>
+            </div>
+        </div>
+        <nav class="main-nav">
+            <ul id="main-nav-content" class="h-0 !py-0">
+                <li class="sm:hidden"><a href="/">/</a></li>
+                <li><a href="/recents">/recents</a></li>
+                <li><a href="/tags">/tags</a></li>
+                <li><a href="/archives">/archives</a></li>
+                {/* <li><a href="#">⚙️</a></li> */}
+            </ul>
+        </nav>
+    </div>
+</header>
+
+<script>
+    const switchBtn = document.getElementById(
+        "main-nav-switch-btn",
+    )! as HTMLButtonElement;
+    const navContent = document.getElementById(
+        "main-nav-content",
+    )! as HTMLUListElement;
+    const openSvgGroup = document.querySelector(
+        "#main-nav-switch-g-open",
+    ) as SVGGElement;
+    const closeSvgGroup = document.querySelector(
+        "#main-nav-switch-g-close",
+    ) as SVGGElement;
+
+    function openNav() {
+        openSvgGroup.setAttribute("opacity", "0");
+        closeSvgGroup.setAttribute("opacity", "100");
+        navContent.className = "h-fit";
+        navContent.dataset["open"] = "on";
+    }
+
+    function closeNav() {
+        openSvgGroup.setAttribute("opacity", "100");
+        closeSvgGroup.setAttribute("opacity", "0");
+        navContent.className = "h-0 !py-0";
+        navContent.dataset["open"] = undefined;
+    }
+
+    function toggleNav() {
+        if (navContent.dataset["open"] === "on") closeNav();
+        else openNav();
+    }
+
+    switchBtn.addEventListener("click", toggleNav);
+</script>
+
+<style scoped>
+    nav.main-nav {
+        @apply self-center text-lg font-bold transition-all overflow-hidden;
+    }
+
+    nav.main-nav ul {
+        @apply py-4 sm:py-0 sm:flex sm:gap-8 sm:h-fit transition-all;
+    }
+
+    nav.main-nav ul li {
+        @apply sm:mb-0 mb-4;
+    }
+
+    nav.main-nav a {
+        @apply relative after:bg-term-normal after:absolute after:h-0.5 after:w-0 after:bottom-0 after:left-0 hover:after:w-full after:transition-all after:duration-300 cursor-pointer;
+        @apply active:text-term-blue;
+    }
+</style>

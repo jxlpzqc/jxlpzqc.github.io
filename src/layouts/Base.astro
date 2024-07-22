@@ -1,5 +1,5 @@
 ---
-import { Header } from "@components/Header";
+import Header from "@components/Header.astro";
 import { SITE } from "@config";
 import "@styles/global.css";
 
@@ -107,7 +107,7 @@ const socialImageURL = new URL(
     class="bg-term-bg text-term-normal font-mono min-h-screen"
     tabindex={-1}
   >
-    <Header client:idle />
+    <Header />
     <main>
       <slot />
     </main>
