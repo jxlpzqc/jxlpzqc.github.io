@@ -25,6 +25,7 @@ const currentFile = isListCurrent ? file : await getFsItem(path);
     command={command}
     baseProps={{
         title: isListCurrent ? file.desc : undefined,
+        description: `Index of ${file.absPath}` + (file.desc ? `, which is about ${file.desc}` : "")
     }}
 >
     {
