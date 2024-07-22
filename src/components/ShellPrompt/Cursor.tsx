@@ -42,7 +42,10 @@ export default forwardRef<HTMLTextAreaElement, Props>((props, ref) => {
                 onCompositionEnd={handleComposition}
                 ref={ref} onFocus={() => setActive(true)} onBlur={() => setActive(false)}
                 className="bg-transparent border-none text-transparent cursor-text 
-                outline-none overflow-hidden resize-none p-0 w-[1px] h-[1em] m-0 absolute" />
+                outline-none overflow-hidden resize-none p-0 w-[1px] h-[1em] m-0 absolute"
+                aria-label="shell prompt"
+                aria-description="Input shell command here"
+            />
         </>
     )
 });
