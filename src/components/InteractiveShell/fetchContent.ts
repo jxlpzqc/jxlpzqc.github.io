@@ -85,7 +85,7 @@ export function getAbsoluteDir(dir: string, pwd: string): string {
 }
 
 function contentToList(element: HTMLElement): string[] {
-    const filenames = element.querySelectorAll("a.file-name");
+    const filenames = element.querySelectorAll("div.file-name");
     const ret: string[] = [];
     for (const filename of filenames) {
         if (filename.textContent !== null) {

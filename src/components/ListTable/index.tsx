@@ -10,9 +10,9 @@ export type Props = {
 function ItemView({ item }: { item: FileSystemItem }) {
     return <li className="pb-2 last:pb-0 ">
         <div className="flex justify-between break-all gap-2">
-            <a className="file-name">
+            <div className="file-name">
                 {item.name + (item.type === "dir" ? "/" : "")}
-            </a>
+            </div>
             <div>{formatDate(item.date) || formatDate(item.collectionObject?.data?.pubDate)}</div>
         </div>
         <div className="flex flex-wrap justify-between">
