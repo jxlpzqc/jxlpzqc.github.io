@@ -86,7 +86,7 @@ export function* executeCommand(command: string, pwd: string, history: CommandHi
                     newCommandHistory.runningStatusList = [];
                     newCommandHistory.resultElement = result.element;
                     if (result.type === "list") newPwd = path;
-                    updateHistoryAndTitle(newPwd, result.title);
+                    updateHistoryAndTitle(path, result.title);
                 }
             } else if (result.externalLink && type === "go") {
                 window.location.href = result.externalLink;
