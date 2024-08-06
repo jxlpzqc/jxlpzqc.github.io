@@ -1,6 +1,6 @@
 ---
 title: C/C++ 宏的图灵完备性
-pubDate: 2024-07-26
+pubDate: 2024-08-06
 repost: false
 tags:
   - C++
@@ -260,3 +260,4 @@ SCAN(FUN_A(a)) // a a FUN_A ( a )
 [^2]: [宏替换 - cppreference](https://zh.cppreference.com/w/cpp/preprocessor/replace)
 [^3]: [宏实现的参数格式重载 - StackOverflow](https://stackoverflow.com/questions/11761703/overloading-macro-on-number-of-arguments)
 [^4]: [map-macro - GitHub](https://github.com/swansontec/map-macro)
+[^5]: [pfultz2's idea](https://github.com/pfultz2/Cloak/wiki/Is-the-C-preprocessor-Turing-complete%3F)
