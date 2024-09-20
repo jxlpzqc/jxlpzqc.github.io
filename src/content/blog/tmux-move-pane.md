@@ -1,10 +1,6 @@
 ---
 title: tmux 中在窗口之间移动窗格
 pubDate: 2024-09-20
-heroImage: 
-tags:
-  - 
-description: 
 repost: false
 ---
 
